@@ -38,18 +38,21 @@ For Linux, Windows, Android (Termux), and iOS instructions, see the [**Complete 
 
 ---
 
-## 🖥️ Ready-to-Use App GUI
+## 🖥️ Sleek Telegram-Styled App (Android & Desktop)
 
 Launch the lightweight embedded local Web GUI with a single command:
 
 ```bash
-./xchat app --port 4000
+xchat app
 ```
-Open **`http://127.0.0.1:4000`** in any web browser to access:
+*(or `xchat gui` — opens automatically in your browser at `http://localhost:8080`)*
+
+- **🎨 Telegram Design Language:** Classic dark theme (`#0e1621`), Telegram-style sidebar (`#17212b`), Telegram blue (`#5288c1`), dynamic colored avatars, and signature double checkmark read receipts (`✓✓`).
+- **🌐 Real Cross-Device Interoperability:** Connect any two devices (Android phone to laptop, laptop to laptop, or phone to phone) over local Wi-Fi, hotspot, or LAN by simply entering the peer's socket address (e.g., `192.168.1.45:9400`).
 - **Contact Book & Zero-Metadata Reachability Ping:** Test peer response over local wireless before chatting.
-- **Direct Messaging:** Live ratcheted conversations with offline queuing.
+- **Direct Messaging:** Live ratcheted conversations with offline queuing and Double Ratchet forward secrecy.
 - **Emergency SOS Beacon:** Instant broadcast of distress coordinates.
-- **Ephemeral Burner Rooms:** Untraceable transient group chats.
+- **Ephemeral Burner Rooms:** Untraceable transient group chats in RAM.
 - **Relay & Crypto Diagnostics:** Real-time visibility into ratchets, hops, and memory zeroization.
 
 ---

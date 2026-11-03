@@ -26,15 +26,15 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Configure edge-to-edge dark theme for status and navigation bars
+        // Configure edge-to-edge Telegram dark theme for status and navigation bars
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(Color.parseColor("#090d16"));
-        window.setNavigationBarColor(Color.parseColor("#090d16"));
+        window.setStatusBarColor(Color.parseColor("#17212b"));
+        window.setNavigationBarColor(Color.parseColor("#17212b"));
 
         webView = new WebView(this);
-        webView.setBackgroundColor(Color.parseColor("#090d16"));
+        webView.setBackgroundColor(Color.parseColor("#0e1621"));
         setContentView(webView);
 
         configureWebView();
@@ -101,6 +101,18 @@ public class MainActivity extends Activity {
                 requestPermissions(neededPermissions.toArray(new String[0]), PERMISSION_REQ_CODE);
             }
         }
+    }
+
+    public WebView getWebView() {
+        return webView;
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (bridge != null) {
+            bridge.cleanup();
+        }
+        super.onDestroy();
     }
 
     @Override

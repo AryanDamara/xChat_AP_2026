@@ -111,21 +111,45 @@ Most Android users do not have Termux and prefer a standard Android application 
 
 ## 3. Step-by-Step Usage
 
-### Step 0: Launch the Ready-to-Use App GUI
+### Step 0: Launch the Sleek Telegram-Styled App GUI
+
 Run:
 ```bash
 xchat app
 ```
 *(or `xchat gui`)*
 
-This boots your local encrypted node and automatically opens a responsive, dark-mode graphical user interface in your default browser at `http://127.0.0.1:8080`.
-- **Zero Internet Required:** Served directly by the local lightweight binary (zero external web requests).
-- **Features in GUI:**
-  - Active E2EE messaging pane with Double Ratchet status
-  - One-click **🚨 Emergency SOS** distress beacon trigger
-  - **🔥 Burner Room** RAM-only ephemeral chat
-  - **📱 Air-Gap QR** camera/modal key exchange
-  - Contact list & live peer reachability pings
+This boots your local encrypted node and automatically opens a responsive, **Telegram-inspired dark-mode graphical user interface** in your default browser at `http://localhost:8080` (or accessible over LAN at `http://<your-ip>:8080`).
+
+#### 🎨 Telegram-Styled User Interface
+- **Signature Telegram Theme:** Dark canvas (`#0e1621`), sidebar & top header (`#17212b`), and signature Telegram blue (`#5288c1`).
+- **Dynamic Colored Avatars:** Contact initials are automatically rendered in vibrant Telegram avatar colors (blue, green, orange, purple, red, teal).
+- **Floating Action Button (FAB):** Telegram-style circular blue `+` button in the bottom right corner of the chat list for 1-tap peer addition.
+- **Message Bubbles & Read Receipts:** Incoming dark bubbles (`#182533`) and outgoing Telegram blue bubbles (`#2b5278`) with timestamps and blue double checkmarks (`✓✓`).
+- **Reachable Address Pill:** Prominently displays your local reachable socket address (e.g., `192.168.1.15:8080` on PC or `192.168.1.45:9400` on Android) for 1-tap clipboard copy and sharing.
+
+---
+
+### Step 0.5: Real Cross-Device Communication Tutorial (Phone ↔ Laptop ↔ PC)
+
+Two users with different devices (e.g., an Android phone and a MacBook, or two laptops) can communicate directly across local Wi-Fi, hotspot, or LAN:
+
+1. **Both devices connect to the same Wi-Fi network or a phone hotspot** (no cellular data needed).
+2. **Device 1 (e.g., Android Phone with xChat APK):**
+   - Open the xChat app.
+   - Look at the top pill: your reachable address is displayed (e.g., `192.168.1.45:9400`).
+   - Tap the pill to copy or share it with your friend.
+3. **Device 2 (e.g., Laptop running `xchat app`):**
+   - Run `xchat app`.
+   - Tap the blue **`+`** button in the bottom right corner of the chat list.
+   - Enter Alias: `Phone Friend`
+   - Enter Reachable Socket: `192.168.1.45:9400`
+   - Click **Connect & Add**.
+4. **Start Messaging:**
+   - Type your message and hit Enter or tap **➤**.
+   - The message is encrypted and dispatched directly over the local network.
+   - The Android phone instantly vibrates, chimes, and renders the incoming message bubble!
+   - Reply back from Android — the laptop screen instantly shows the response with double checkmarks (`✓✓`).
 
 ---
 
