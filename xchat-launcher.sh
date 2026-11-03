@@ -140,5 +140,19 @@ echo ""
     fi
 ) &
 
-# Launch App GUI server
-exec "$XCHAT_BIN" app --port "$PORT"
+# Launch App GUI server with dynamic live UI serving if available
+LOCAL_HTML="${SCRIPT_DIR}/android/app/src/main/assets/index.html"
+LIVE_SERVER="${SCRIPT_DIR}/scripts/live-app-server.py"
+
+if command -v python3 >/dev/null 2>&1 && [ -f "$LOCAL_HTML" ] && [ -f "$LIVE_SERVER" ]; then
+    BACKEND_PORT=$((PORT + 1))
+    echo "[*] Starting xChat P2P backend engine on internal port ${BACKEND_PORT}..."
+    "$XCHAT_BIN" app --port "$BACKEND_PORT" >/dev/null 2>&1 &
+    BACKEND_PID=$!
+    trap 'kill $BACKEND_PID 2>/dev/null || true' EXIT INT TERM
+    
+    echo "[*] Serving Live OLED Black App on ${APP_URL}..."
+    exec python3 "$LIVE_SERVER" "$PORT" "$BACKEND_PORT" "$LOCAL_HTML"
+else
+    exec "$XCHAT_BIN" app --port "$PORT"
+fi
