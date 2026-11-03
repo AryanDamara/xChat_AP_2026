@@ -144,7 +144,7 @@ pub const EMBEDDED_HTML: &str = r#"<!DOCTYPE html>
         <div class="modal">
             <div class="modal-title">Add New Contact</div>
             <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 4px;">Contact Alias</label>
-            <input type="text" class="modal-input" id="newContactAlias" placeholder="e.g. Alice, Bob, HQ">
+            <input type="text" class="modal-input" id="newContactAlias" placeholder="e.g. Peer-1, Relay, Base">
             <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 4px;">Prekey Bundle (JSON or Address)</label>
             <textarea class="modal-input" id="newContactBundle" rows="6" placeholder="Paste peer's exported Prekey Bundle JSON..."></textarea>
             <div class="modal-actions">
@@ -199,15 +199,14 @@ pub const EMBEDDED_HTML: &str = r#"<!DOCTYPE html>
 
     <script>
         let myAddr = "xchat_local";
-        let activePeer = "Alice";
-        let contacts = [
-            { alias: "Alice", address: "xchat_c3d73e0c535ebb07", fingerprint: "c3d73e0c535ebb07928...", status: "12ms (Direct BLE)" },
-            { alias: "Bob (Relay)", address: "xchat_4161e519e39375bd", fingerprint: "4161e519e39375bd88a...", status: "Buffered (Relay)" }
-        ];
+        let activePeer = null;
+        let contacts = [];
 
         async function init() {
             renderContacts();
-            selectPeer(contacts[0]);
+            if (contacts.length > 0) {
+                selectPeer(contacts[0]);
+            }
             try {
                 const res = await fetch('/api/identity');
                 const data = await res.json();
@@ -222,16 +221,24 @@ pub const EMBEDDED_HTML: &str = r#"<!DOCTYPE html>
         function renderContacts() {
             const list = document.getElementById('contactList');
             list.innerHTML = "";
+            if (contacts.length === 0) {
+                list.innerHTML = `
+                    <div style="text-align: center; color: var(--text-muted); font-size: 12px; padding: 30px 16px; line-height: 1.5;">
+                        No contacts yet.<br>Click <b>+ Add Peer</b> above to connect with a peer by address.
+                    </div>
+                `;
+                return;
+            }
             contacts.forEach(c => {
                 const card = document.createElement('div');
-                card.className = "contact-card" + (c.alias === activePeer ? " active" : "");
+                card.className = "contact-card" + (activePeer && c.alias === activePeer ? " active" : "");
                 card.onclick = () => selectPeer(c);
                 card.innerHTML = `
                     <div>
                         <div class="contact-name">${c.alias}</div>
                         <div class="contact-addr">${c.address.substring(0, 16)}...</div>
                     </div>
-                    <div class="ping-pill">${c.status}</div>
+                    <div class="ping-pill">${c.status || "Ready"}</div>
                 `;
                 list.appendChild(card);
             });

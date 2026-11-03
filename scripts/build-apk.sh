@@ -96,12 +96,16 @@ APK_OUT="${DIST_DIR}/xchat-v0.1.0.apk"
     --out "${APK_OUT}" \
     "${BUILD_DIR}/xchat-aligned.apk"
 
+# Also create generic xchat.apk
+cp "${APK_OUT}" "${DIST_DIR}/xchat.apk"
+
 # Verify signature
 echo "[*] Verifying signed APK..."
 "${APKSIGNER}" verify --verbose "${APK_OUT}"
 
-# Generate Checksum
+# Generate Checksums
 (cd "${DIST_DIR}" && shasum -a 256 "xchat-v0.1.0.apk" > "xchat-v0.1.0.apk.sha256")
+(cd "${DIST_DIR}" && shasum -a 256 "xchat.apk" > "xchat.apk.sha256")
 
 echo "=========================================================="
 echo " [✓] Android APK Built Successfully!"

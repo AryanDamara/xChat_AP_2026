@@ -150,7 +150,7 @@
     <div class="modal-overlay" id="addContactModal">
         <div class="modal">
             <div class="modal-title">Add Peer Contact</div>
-            <input type="text" class="modal-input" id="newAlias" placeholder="Alias (e.g. Alice)">
+            <input type="text" class="modal-input" id="newAlias" placeholder="Alias (e.g. Friend, Office, Relay)">
             <input type="text" class="modal-input" id="newAddress" placeholder="Address (xchat_...)">
             <div class="modal-actions">
                 <button class="btn" style="background:#334155; color:white;" onclick="closeModal('addContactModal')">Cancel</button>
@@ -247,15 +247,8 @@
 
         document.getElementById('myAddrPill').innerText = myAddress;
 
-        // Default Contacts
+        // Clean Contacts Book (Zero dummy users)
         let contacts = JSON.parse(Storage.get('contacts') || '[]');
-        if (contacts.length === 0) {
-            contacts = [
-                { alias: "Alice (Field Leader)", address: "xchat_a1b2c3d4e5f60718", ping: "14ms" },
-                { alias: "Relay Node #1", address: "xchat_778899aabbccdde0", ping: "8ms" }
-            ];
-            Storage.set('contacts', JSON.stringify(contacts));
-        }
 
         let activeContact = null;
         let chatHistories = JSON.parse(Storage.get('chat_histories') || '{}');
@@ -263,6 +256,14 @@
         function renderContacts() {
             const listEl = document.getElementById('contactList');
             listEl.innerHTML = '';
+            if (contacts.length === 0) {
+                listEl.innerHTML = `
+                    <div style="text-align: center; color: var(--text-muted); font-size: 12px; padding: 30px 16px; line-height: 1.5;">
+                        No contacts yet.<br>Tap <b>+ Add</b> above to add a peer's cryptographic address.
+                    </div>
+                `;
+                return;
+            }
             contacts.forEach((c, idx) => {
                 const card = document.createElement('div');
                 card.className = 'contact-card' + (activeContact && activeContact.address === c.address ? ' active' : '');

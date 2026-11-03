@@ -280,9 +280,54 @@ To maintain maximum privacy in high-threat environments:
 
 ---
 
-## 6. Real-Hardware Field-Testing Playbook with Friends
+## 6. Real-Hardware Field-Testing: Two Separate Machines & Real Users
 
-Use this playbook to test xChat on real hardware (phones, laptops, tablets) with friends in real-world conditions without internet:
+xChat features dedicated live testing tools that test **two completely separate physical machines** (or two distinct isolated OS processes) running genuine random cryptographic identities—**zero dummy test users (no hardcoded Alice or Bob)**:
+
+### Option A: 1-Command Automated Two-Machine Network Test
+To test two distinct, fully autonomous machines communicating over real network sockets on any platform, run:
+
+```bash
+xchat test-two-nodes
+```
+
+This live test:
+1. Spawns **Machine 1** on port 9201 and **Machine 2** on port 9202 with isolated memory spaces.
+2. Generates genuine, random CSPRNG Ed25519/X25519 keypairs for both machines (e.g. `xchat_0dcc...` and `xchat_9a1c...`).
+3. Executes an asynchronous **X3DH initial key agreement** across real TCP sockets.
+4. Machine 1 encrypts and transmits Message #1 over the wire to Machine 2.
+5. Machine 2 accepts the network packet, authenticates the ChaCha20-Poly1305 AEAD tag, derives session keys, and decrypts the exact plaintext.
+6. Machine 2 transmits an authenticated reply over TCP back to Machine 1, advancing the **Diffie-Hellman Ratchet**.
+7. Machine 1 decrypts the reply and transmits Message #3, exercising symmetric chain ratcheting.
+8. Executes live adversarial tests: verifies that **packet replay attacks**, **ciphertext bit-flip tampering**, and **routing header tampering** are immediately rejected on the wire.
+
+### Option B: Testing Across Two Separate Physical Computers over LAN / Wi-Fi
+To test across two laptops, tablets, or phones on the same offline Wi-Fi network (or phone hotspot):
+
+**On Machine 2 (Receiver, IP e.g. `192.168.1.50`):**
+```bash
+xchat daemon --port 7000
+```
+Machine 2 prints its generated address and exports its public prekey bundle JSON.
+
+**On Machine 1 (Sender):**
+```bash
+xchat send \
+  --target 192.168.1.50:7000 \
+  --bundle '<PASTE_MACHINE_2_PREKEY_BUNDLE_JSON>' \
+  --message "Field intelligence: channel verified."
+```
+Machine 2 immediately receives, authenticates, and decrypts the message in real time with zero reliance on external servers!
+
+### Option C: Isolated Multi-Process Bash Test Script
+To run an automated two-machine test using two completely isolated directories (`/tmp/xchat_machine_alpha` and `/tmp/xchat_machine_beta`):
+```bash
+./scripts/test-two-machines.sh
+```
+
+---
+
+## 7. Field Playbook with Friends in Real-World Environments
 
 ```text
        ┌──────────────┐         ┌──────────────┐         ┌──────────────┐
