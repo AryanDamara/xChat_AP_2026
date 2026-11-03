@@ -63,10 +63,12 @@
 
         html, body {
             height: 100%;
+            height: 100dvh;
             width: 100%;
             margin: 0;
             padding: 0;
             overflow: hidden;
+            background-color: var(--bg-canvas);
         }
 
         body {
@@ -77,6 +79,10 @@
             flex-direction: column;
             user-select: none;
             -webkit-font-smoothing: antialiased;
+            height: 100%;
+            height: 100dvh;
+            width: 100%;
+            position: relative;
         }
 
         /* Typography Utilities */
@@ -157,12 +163,12 @@
             letter-spacing: 0.01em;
             white-space: nowrap;
         }
-            border-radius: 9999px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10.5px;
-            font-weight: 600;
-            color: var(--pastel-mint);
-            letter-spacing: 0.01em;
+
+        .status-desktop {
+            display: inline;
+        }
+        .status-mobile {
+            display: none;
         }
 
         .pulse-dot {
@@ -171,6 +177,7 @@
             border-radius: 50%;
             background: var(--status-green);
             box-shadow: 0 0 6px var(--status-green);
+            flex-shrink: 0;
         }
 
         .header-actions {
@@ -244,12 +251,13 @@
         /* 2. Main Workspace Layout */
         .workspace {
             display: flex;
-            flex: 1 1 auto;
+            flex: 1 1 0%;
             min-height: 0;
             height: 100%;
             position: relative;
             overflow: hidden;
             background: var(--bg-canvas);
+            width: 100%;
         }
 
         /* Left Sidebar: Contacts & Links */
@@ -410,11 +418,11 @@
             color: var(--text-secondary);
         }
         .contact-scroll-feed {
-            flex: 1 1 auto;
+            flex: 1 1 0%;
             min-height: 0;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
-            padding: 4px 14px 90px 14px;
+            padding: 4px 14px calc(84px + var(--safe-bottom)) 14px;
             display: flex;
             flex-direction: column;
             gap: 6px;
@@ -548,6 +556,9 @@
         }
         .nav-dock-item:hover, .nav-dock-item.active {
             color: var(--pastel-lavender);
+        }
+        .nav-dock-item.active {
+            background: rgba(212, 196, 251, 0.12);
         }
         .nav-dock-center-fab {
             width: 48px;
@@ -825,6 +836,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
+            height: 100dvh;
             background: rgba(0, 0, 0, 0.88);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -832,6 +844,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            box-sizing: border-box;
         }
         .modal-overlay.active {
             display: flex;
@@ -844,8 +857,10 @@
             width: 100%;
             max-width: 440px;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95);
-            max-height: 90vh;
+            max-height: 85vh;
+            max-height: 85dvh;
             overflow-y: auto;
+            box-sizing: border-box;
         }
         .modal-title {
             font-family: 'Playfair Display', Georgia, serif;
@@ -881,6 +896,7 @@
             font-family: inherit;
             margin-bottom: 14px;
             outline: none;
+            box-sizing: border-box;
         }
         .form-input:focus {
             border-color: var(--border-focus);
@@ -920,16 +936,215 @@
             color: #ffffff;
         }
 
+        /* Sidebar Tab Panes */
+        .sidebar-tab-content {
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 0%;
+            min-height: 0;
+            height: 100%;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        /* Carrier & Transports Hub */
+        .carrier-header-strip {
+            padding: 12px 16px 6px 16px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .carrier-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .carrier-engine-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: var(--pastel-mint);
+            text-transform: uppercase;
+        }
+        .carrier-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(210, 232, 184, 0.12);
+            border: 1px solid rgba(210, 232, 184, 0.25);
+            padding: 2px 7px;
+            border-radius: 9999px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5px;
+            font-weight: 600;
+            color: var(--pastel-mint);
+        }
+        .carrier-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--text-pure);
+            letter-spacing: -0.01em;
+            margin-top: 2px;
+        }
+        .carrier-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+        .carrier-scroll-feed {
+            flex: 1 1 0%;
+            min-height: 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 8px 14px calc(84px + var(--safe-bottom)) 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .carrier-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 20px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: border-color 0.15s;
+        }
+        .carrier-card:hover {
+            border-color: #333333;
+        }
+        .carrier-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .carrier-card-title-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .carrier-card-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-pure);
+        }
+        .carrier-card-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5px;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 9999px;
+        }
+        .badge-mint {
+            background: rgba(210, 232, 184, 0.15);
+            color: var(--pastel-mint);
+            border: 1px solid rgba(210, 232, 184, 0.25);
+        }
+        .badge-lavender {
+            background: rgba(212, 196, 251, 0.15);
+            color: var(--pastel-lavender);
+            border: 1px solid rgba(212, 196, 251, 0.25);
+        }
+        .badge-amber {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+        .badge-red {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+        .carrier-card-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+        .carrier-routing-diagram {
+            background: #080808;
+            border: 1px solid #1f1f1f;
+            border-radius: 12px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5px;
+            color: var(--text-secondary);
+        }
+        .routing-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        .routing-dot {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #141414;
+            border: 1px solid #282828;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--pastel-lavender);
+            font-size: 9px;
+            font-weight: 700;
+        }
+        .routing-arrow {
+            color: #444444;
+            font-size: 12px;
+        }
+        .carrier-stats-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .carrier-stat-pill {
+            flex: 1;
+            background: #080808;
+            border: 1px solid #1f1f1f;
+            border-radius: 10px;
+            padding: 6px 8px;
+            text-align: center;
+        }
+        .stat-pill-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
+        }
+        .stat-pill-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--pastel-mint);
+            margin-top: 2px;
+        }
+
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
+            body.chat-open header {
+                display: none !important;
+            }
             .workspace {
-                height: 100%;
                 width: 100%;
+                flex: 1 1 0%;
+                min-height: 0;
+                height: 100%;
             }
             .sidebar {
                 width: 100%;
-                flex: 1 1 100%;
-                min-height: 100%;
+                flex: 1 1 0%;
+                min-height: 0;
                 height: 100%;
                 border-right: none;
             }
@@ -937,8 +1152,7 @@
                 display: none;
                 width: 100%;
                 position: absolute;
-                top: 0;
-                left: 0;
+                inset: 0;
                 height: 100%;
                 z-index: 50;
             }
@@ -947,9 +1161,100 @@
             }
             .chat-panel.active-mobile {
                 display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+                height: 100% !important;
+                position: absolute !important;
+                inset: 0 !important;
+                z-index: 50 !important;
             }
             .back-btn-mobile {
-                display: block !important;
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .status-desktop {
+                display: none !important;
+            }
+            .status-mobile {
+                display: inline !important;
+            }
+            .mesh-status-pill {
+                padding: 2px 7px;
+                font-size: 9.5px;
+            }
+            .header-brand {
+                gap: 8px;
+            }
+            .brand-logo-btn {
+                width: 32px;
+                height: 32px;
+                border-radius: 10px;
+            }
+            .action-circle-btn {
+                width: 32px;
+                height: 32px;
+            }
+            .socket-banner-card {
+                margin: 8px 12px 4px 12px;
+                padding: 10px 14px;
+                border-radius: 16px;
+            }
+            .socket-value {
+                font-size: 13px;
+            }
+            .btn-copy-lavender {
+                padding: 5px 12px;
+                font-size: 11px;
+            }
+            .highlight-banner-mint {
+                margin: 4px 12px 8px 12px;
+                padding: 10px 14px;
+                border-radius: 16px;
+            }
+            .banner-mint-title {
+                font-size: 14px;
+            }
+            .banner-mint-desc {
+                font-size: 11px;
+            }
+            .search-wrap {
+                padding: 0 12px 6px 12px;
+            }
+            .list-header-row {
+                padding: 4px 14px;
+            }
+            .contact-scroll-feed {
+                padding: 4px 12px calc(80px + var(--safe-bottom)) 12px;
+            }
+            .bottom-nav-dock {
+                left: 12px;
+                right: 12px;
+                bottom: calc(12px + var(--safe-bottom));
+                height: 54px;
+                border-radius: 28px;
+            }
+            .nav-dock-item {
+                width: 38px;
+                height: 38px;
+            }
+            .nav-dock-center-fab {
+                width: 44px;
+                height: 44px;
+            }
+            .modal-card {
+                padding: 20px 16px;
+                border-radius: 20px;
+            }
+            .modal-overlay {
+                padding: 12px;
+            }
+            .security-banner-strip {
+                font-size: 9.5px;
+                padding: 5px 10px;
             }
         }
     </style>
@@ -968,7 +1273,10 @@
                 <div class="app-title">xChat</div>
                 <div class="mesh-status-pill">
                     <div class="pulse-dot"></div>
-                    <span id="meshStatusLabel">Direct P2P • 0 Central Servers</span>
+                    <span id="meshStatusLabel">
+                        <span class="status-desktop">Direct P2P • 0 Central Servers</span>
+                        <span class="status-mobile">Direct P2P</span>
+                    </span>
                 </div>
             </div>
         </div>
@@ -983,7 +1291,7 @@
 
             <!-- 3-Dots Dropdown Menu -->
             <div class="dropdown-menu" id="topMenuDropdown">
-                <div class="dropdown-item" onclick="closeDropdown(); openModal('carrierModal');">
+                <div class="dropdown-item" onclick="closeDropdown(); switchTab('carrier');">
                     <span>🌐 Carrier & Mixnet</span>
                 </div>
                 <div class="dropdown-item" onclick="closeDropdown(); openModal('burnerModal');">
@@ -1008,58 +1316,179 @@
         
         <!-- Left Pane: Sidebar & Contacts -->
         <aside class="sidebar" id="sidebar">
-            <!-- Reachable IP & Socket Banner -->
-            <div class="socket-banner-card">
-                <div>
-                    <div class="socket-label">Your Reachable Socket</div>
-                    <div class="socket-value" id="myReachableSocket">Loading...</div>
+            
+            <!-- Tab 1: Chats Feed -->
+            <div class="sidebar-tab-content" id="tabPaneChats">
+                <!-- Reachable IP & Socket Banner -->
+                <div class="socket-banner-card">
+                    <div>
+                        <div class="socket-label">Your Reachable Socket</div>
+                        <div class="socket-value" id="myReachableSocket">Loading...</div>
+                    </div>
+                    <button class="btn-copy-lavender" onclick="copyMySocket()" title="Copy socket to clipboard">Copy</button>
                 </div>
-                <button class="btn-copy-lavender" onclick="copyMySocket()" title="Copy socket to clipboard">Copy</button>
-            </div>
 
-            <!-- Chaumian Mixnet Forecast Banner (CashPilot Style) -->
-            <div class="highlight-banner-mint" onclick="openModal('carrierModal')">
-                <div class="banner-mint-top">
-                    <span class="banner-mint-badge">LAYER 3 COMM</span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                <!-- Chaumian Mixnet Forecast Banner (CashPilot Style) -->
+                <div class="highlight-banner-mint" onclick="switchTab('carrier')">
+                    <div class="banner-mint-top">
+                        <span class="banner-mint-badge">LAYER 3 COMM</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    </div>
+                    <div class="banner-mint-title">Chaumian Mixnet Active</div>
+                    <div class="banner-mint-desc">Traffic batched & shuffled with timing jitter to break correlation.</div>
                 </div>
-                <div class="banner-mint-title">Chaumian Mixnet Active</div>
-                <div class="banner-mint-desc">Traffic batched & shuffled with timing jitter to break correlation.</div>
-            </div>
 
-            <!-- Search Bar -->
-            <div class="search-wrap">
-                <div class="search-pill-box">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input type="text" class="search-input-field" id="searchFilter" placeholder="Search contacts or sockets..." oninput="filterContacts()">
+                <!-- Search Bar -->
+                <div class="search-wrap">
+                    <div class="search-pill-box">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" class="search-input-field" id="searchFilter" placeholder="Search contacts or sockets..." oninput="filterContacts()">
+                    </div>
+                </div>
+
+                <!-- Section Header -->
+                <div class="list-header-row">
+                    <span class="list-header-title">Active Encrypted Links</span>
+                </div>
+
+                <!-- Scrollable Contacts List -->
+                <div class="contact-scroll-feed" id="contactList">
+                    <!-- Dynamically populated -->
                 </div>
             </div>
 
-            <!-- Section Header -->
-            <div class="list-header-row">
-                <span class="list-header-title">Active Encrypted Links</span>
-            </div>
+            <!-- Tab 2: Carrier & Transports Hub (Stitch Screen 3 Style) -->
+            <div class="sidebar-tab-content" id="tabPaneCarrier" style="display: none;">
+                <div class="carrier-header-strip">
+                    <div class="carrier-top-row">
+                        <span class="carrier-engine-badge">MULTI-TRANSPORT ENGINE</span>
+                        <span class="carrier-status-pill"><span class="pulse-dot"></span>Zero-Internet Ready</span>
+                    </div>
+                    <div class="carrier-title">Carrier & Transports</div>
+                    <div class="carrier-subtitle">Send confidential messages even during complete telecommunications blackouts.</div>
+                </div>
 
-            <!-- Scrollable Contacts List -->
-            <div class="contact-scroll-feed" id="contactList">
-                <!-- Dynamically populated -->
+                <div class="carrier-scroll-feed">
+                    <!-- Card 1: Chaumian Mixnet Telemetry -->
+                    <div class="carrier-card">
+                        <div class="carrier-card-header">
+                            <div class="carrier-card-title-group">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--pastel-mint);"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                                <span class="carrier-card-title">Chaumian Mixnet</span>
+                            </div>
+                            <span class="carrier-card-badge badge-mint">ACTIVE • 4 Batched</span>
+                        </div>
+                        <div class="carrier-card-desc">Internet & cellular data anonymization with Sphinx packet onion encryption and cover chaff.</div>
+                        
+                        <div class="carrier-routing-diagram">
+                            <div class="routing-node">
+                                <div class="routing-dot">📱</div>
+                                <span>Client</span>
+                            </div>
+                            <div class="routing-arrow">➔</div>
+                            <div class="routing-node">
+                                <div class="routing-dot">R1</div>
+                                <span>Zurich</span>
+                            </div>
+                            <div class="routing-arrow">➔</div>
+                            <div class="routing-node">
+                                <div class="routing-dot">R2</div>
+                                <span>Reykjavik</span>
+                            </div>
+                            <div class="routing-arrow">➔</div>
+                            <div class="routing-node">
+                                <div class="routing-dot" style="color:var(--pastel-mint);">🔒</div>
+                                <span>Recipient</span>
+                            </div>
+                        </div>
+
+                        <div class="carrier-stats-row">
+                            <div class="carrier-stat-pill">
+                                <div class="stat-pill-label">Timing Jitter</div>
+                                <div class="stat-pill-val">20ms-120ms</div>
+                            </div>
+                            <div class="carrier-stat-pill">
+                                <div class="stat-pill-label">Cover Traffic</div>
+                                <div class="stat-pill-val">Active Chaff</div>
+                            </div>
+                            <div class="carrier-stat-pill">
+                                <div class="stat-pill-label">Mix Hops</div>
+                                <div class="stat-pill-val">3 Sphinx Hops</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Cellular SMS Frame Carrier -->
+                    <div class="carrier-card">
+                        <div class="carrier-card-header">
+                            <div class="carrier-card-title-group">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#f59e0b;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                <span class="carrier-card-title">Cellular SMS Carrier</span>
+                            </div>
+                            <span class="carrier-card-badge badge-amber">140-Octet Frame</span>
+                        </div>
+                        <div class="carrier-card-desc">Encodes ratcheted ciphertext into 140-character SMS text frames without cellular data or IP stacks. Telcos see only opaque hex.</div>
+                        <button class="btn-action btn-primary" style="margin-top:4px; font-size:12px; padding:7px 16px; align-self:flex-start;" onclick="generateSmsFrameDemo()">💬 Generate SMS Frame</button>
+                        <div id="smsFrameResult" style="font-family:'JetBrains Mono', monospace; font-size:10.5px; word-break:break-all; margin-top:4px; display:none; background:#080808; border:1px solid #282828; padding:10px 12px; border-radius:12px; color:var(--pastel-lavender);"></div>
+                    </div>
+
+                    <!-- Card 3: Voice Call Audio Modem -->
+                    <div class="carrier-card">
+                        <div class="carrier-card-header">
+                            <div class="carrier-card-title-group">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--pastel-mint);"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                                <span class="carrier-card-title">Acoustic Audio Modem</span>
+                            </div>
+                            <span class="carrier-card-badge badge-mint">Bell 202 AFSK</span>
+                        </div>
+                        <div class="carrier-card-desc">Modulates ciphertext into 1200Hz/2200Hz audio tones for telephone voice calls or speaker-mic airgap when RF radios are jammed.</div>
+                        <button class="btn-action btn-secondary" style="margin-top:4px; font-size:12px; padding:7px 16px; align-self:flex-start;" onclick="playAcousticTones()">▶ Play Acoustic Tones</button>
+                    </div>
+
+                    <!-- Card 4: Air-Gap Identity & QR -->
+                    <div class="carrier-card">
+                        <div class="carrier-card-header">
+                            <div class="carrier-card-title-group">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--pastel-lavender);"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                                <span class="carrier-card-title">Air-Gap Identity</span>
+                            </div>
+                            <span class="carrier-card-badge badge-lavender">Hardware Bound</span>
+                        </div>
+                        <div class="carrier-card-desc">Offline public identity bundle with Ed25519 root and X25519 prekeys.</div>
+                        <div style="background:#080808; border:1px solid #282828; color:var(--pastel-lavender); padding:10px 12px; font-family:'JetBrains Mono', monospace; font-size:10.5px; border-radius:12px; word-break:break-all; max-height:80px; overflow-y:auto;" id="qrPayloadDisplaySide">Loading identity...</div>
+                        <button class="btn-action btn-primary" style="margin-top:4px; font-size:12px; padding:7px 16px; align-self:flex-start;" onclick="copyIdentityPayload()">📋 Copy Identity</button>
+                    </div>
+
+                    <!-- Card 5: Emergency SOS Broadcast -->
+                    <div class="carrier-card" style="border-color:#381414;">
+                        <div class="carrier-card-header">
+                            <div class="carrier-card-title-group">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--status-red);"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                <span class="carrier-card-title" style="color:#ff8585;">Emergency SOS Distress</span>
+                            </div>
+                            <span class="carrier-card-badge badge-red">CRITICAL</span>
+                        </div>
+                        <div class="carrier-card-desc">Transmits high-priority encrypted distress coordinates to all peer radios, mesh hops, and reflectors in range.</div>
+                        <button class="btn-action btn-danger" style="margin-top:4px; font-size:12px; padding:7px 16px; align-self:flex-start;" onclick="triggerSos()">🚨 Broadcast SOS Beacon</button>
+                    </div>
+                </div>
             </div>
 
             <!-- Floating Bottom Navigation Dock -->
             <nav class="bottom-nav-dock">
-                <button class="nav-dock-item active" title="Chats">
+                <button class="nav-dock-item active" id="navItemChats" onclick="switchTab('chats')" title="Chats">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                 </button>
-                <button class="nav-dock-item" onclick="openModal('carrierModal')" title="Carrier & Mixnet">
+                <button class="nav-dock-item" id="navItemCarrier" onclick="switchTab('carrier')" title="Carrier & Mixnet">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                 </button>
                 <button class="nav-dock-center-fab" onclick="openModal('addPeerModal')" title="New Secure Chat">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 </button>
-                <button class="nav-dock-item" onclick="openModal('burnerModal')" title="Burner Room">
+                <button class="nav-dock-item" id="navItemBurner" onclick="openModal('burnerModal')" title="Burner Room">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
                 </button>
-                <button class="nav-dock-item" onclick="openModal('profileModal')" title="Profile & Keys">
+                <button class="nav-dock-item" id="navItemProfile" onclick="openModal('profileModal')" title="Profile & Keys">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </button>
             </nav>
@@ -1116,7 +1545,7 @@
 
                 <!-- Bottom Message Input Dock -->
                 <div class="input-bar">
-                    <button class="action-circle-btn" onclick="openModal('carrierModal')" title="Attach / Transports">
+                    <button class="action-circle-btn" onclick="openModal('carrierTransportModal')" title="Attach / Transports">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     </button>
                     <input type="text" class="input-box" id="msgInput" placeholder="Type encrypted message..." onkeydown="if(event.key==='Enter') sendCurrentMessage()">
@@ -1167,37 +1596,40 @@
         </div>
     </div>
 
-    <!-- Modal 3: Carrier & Mixnet Blackout Hub -->
-    <div class="modal-overlay" id="carrierModal">
+    <!-- Modal 3: Transport Selector Sheet -->
+    <div class="modal-overlay" id="carrierTransportModal">
         <div class="modal-card">
-            <div class="modal-title">🌐 Multi-Transport & Mixnet Carrier</div>
-            <div class="modal-desc">Send confidential messages even during complete telecommunications blackouts.</div>
+            <div class="modal-title">Select Active Transport</div>
+            <div class="modal-desc">Choose transmission medium for your encrypted messages.</div>
 
-            <!-- Card 1: Chaumian Mixnet -->
-            <div style="font-size: 12px; margin-bottom: 12px; line-height: 1.5; color: var(--text-secondary); background: #0a0a0a; padding: 14px; border-radius: 16px; border: 1px solid var(--border-card);">
-                <div style="font-weight: 700; color: var(--pastel-mint); margin-bottom: 4px; font-size: 13px;">🌀 Chaumian Mixnet (Internet & Mobile Data)</div>
-                <div>Status: <span style="color:var(--status-green); font-weight:600;">ACTIVE (Batched & Shuffled)</span></div>
-                <div>Batch Threshold: 4 Envelopes | Cover Chaff: Active</div>
-                <div>Timing Jitter: 20ms - 120ms (Breaks statistical correlation)</div>
-            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+                <div style="background:#0a0a0a; border:1px solid #282828; padding:12px 14px; border-radius:14px; cursor:pointer;" onclick="closeModal('carrierTransportModal'); alert('🌀 Mixnet Onion Routing active.');">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-weight:700; color:var(--pastel-mint); font-size:13px;">🌀 Chaumian Mixnet</span>
+                        <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--status-green);">ACTIVE</span>
+                    </div>
+                    <div style="font-size:11.5px; color:var(--text-secondary); margin-top:2px;">Sphinx onion routing with 3 mix hops & timing jitter.</div>
+                </div>
 
-            <!-- Card 2: Cellular SMS Carrier -->
-            <div style="font-size: 12px; margin-bottom: 12px; line-height: 1.5; color: var(--text-secondary); background: #0a0a0a; padding: 14px; border-radius: 16px; border: 1px solid var(--border-card);">
-                <div style="font-weight: 700; color: #f59e0b; margin-bottom: 4px; font-size: 13px;">💬 Cellular SMS Carrier (No Data/Internet)</div>
-                <div>Transmits encrypted ciphertext in 140-char SMS text frames. Telcos see only opaque hex.</div>
-                <button class="btn-action btn-primary" style="margin-top:10px; font-size:11.5px; padding:6px 14px;" onclick="generateSmsFrameDemo()">Generate SMS Frame</button>
-                <div id="smsFrameResult" style="font-family:'JetBrains Mono', monospace; font-size:11px; word-break:break-all; margin-top:10px; display:none; background:#000; border:1px solid #333; padding:10px; border-radius:8px; color:var(--pastel-lavender);"></div>
-            </div>
+                <div style="background:#0a0a0a; border:1px solid #282828; padding:12px 14px; border-radius:14px; cursor:pointer;" onclick="closeModal('carrierTransportModal'); switchTab('carrier');">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-weight:700; color:#f59e0b; font-size:13px;">💬 Cellular SMS Frame</span>
+                        <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#f59e0b;">CELLULAR</span>
+                    </div>
+                    <div style="font-size:11.5px; color:var(--text-secondary); margin-top:2px;">140-char SMS frames for complete internet blackouts.</div>
+                </div>
 
-            <!-- Card 3: Voice Call Audio Modem -->
-            <div style="font-size: 12px; margin-bottom: 12px; line-height: 1.5; color: var(--text-secondary); background: #0a0a0a; padding: 14px; border-radius: 16px; border: 1px solid var(--border-card);">
-                <div style="font-weight: 700; color: var(--pastel-mint); margin-bottom: 4px; font-size: 13px;">🎙️ Voice Call Audio Modem (Bell 202 AFSK)</div>
-                <div>Modulates ciphertext into 1200Hz/2200Hz audio tones for telephone calls or speaker-mic airgap.</div>
-                <button class="btn-action btn-secondary" style="margin-top:10px; font-size:11.5px; padding:6px 14px;" onclick="playAcousticTones()">▶ Play Acoustic Tones</button>
+                <div style="background:#0a0a0a; border:1px solid #282828; padding:12px 14px; border-radius:14px; cursor:pointer;" onclick="closeModal('carrierTransportModal'); switchTab('carrier');">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-weight:700; color:var(--pastel-lavender); font-size:13px;">🎙️ Acoustic Audio Modem</span>
+                        <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--pastel-lavender);">AUDIO</span>
+                    </div>
+                    <div style="font-size:11.5px; color:var(--text-secondary); margin-top:2px;">Bell 202 AFSK audio tones over telephone voice calls.</div>
+                </div>
             </div>
 
             <div class="modal-actions">
-                <button class="btn-action btn-cancel" onclick="closeModal('carrierModal')">Close</button>
+                <button class="btn-action btn-cancel" onclick="closeModal('carrierTransportModal')">Close</button>
             </div>
         </div>
     </div>
@@ -1380,6 +1812,9 @@
 
             document.getElementById('myReachableSocket').innerText = myIdentity.reachable;
             document.getElementById('qrPayloadDisplay').innerText = JSON.stringify(myIdentity, null, 2);
+            if (document.getElementById('qrPayloadDisplaySide')) {
+                document.getElementById('qrPayloadDisplaySide').innerText = JSON.stringify(myIdentity, null, 2);
+            }
             document.getElementById('profileDetailsBody').innerText = 
                 `Address:     ${myIdentity.address}\n` +
                 `Reachable:   ${myIdentity.reachable}\n` +
@@ -1464,6 +1899,7 @@
             document.getElementById('activePeerStatus').innerText = c.target ? 'online • ' + c.target : 'Double Ratchet Verified';
 
             // Mobile slide transition
+            document.body.classList.add('chat-open');
             document.getElementById('sidebar').classList.add('hidden-mobile');
             document.getElementById('chatPanel').classList.add('active-mobile');
 
@@ -1475,8 +1911,31 @@
         }
 
         function closeChatMobile() {
+            document.body.classList.remove('chat-open');
             document.getElementById('sidebar').classList.remove('hidden-mobile');
             document.getElementById('chatPanel').classList.remove('active-mobile');
+        }
+
+        function switchTab(tab) {
+            const paneChats = document.getElementById('tabPaneChats');
+            const paneCarrier = document.getElementById('tabPaneCarrier');
+            const navChats = document.getElementById('navItemChats');
+            const navCarrier = document.getElementById('navItemCarrier');
+
+            // If on mobile and a chat was open, close it back to the sidebar
+            closeChatMobile();
+
+            if (tab === 'carrier') {
+                if (paneChats) paneChats.style.display = 'none';
+                if (paneCarrier) paneCarrier.style.display = 'flex';
+                if (navChats) navChats.classList.remove('active');
+                if (navCarrier) navCarrier.classList.add('active');
+            } else {
+                if (paneCarrier) paneCarrier.style.display = 'none';
+                if (paneChats) paneChats.style.display = 'flex';
+                if (navCarrier) navCarrier.classList.remove('active');
+                if (navChats) navChats.classList.add('active');
+            }
         }
 
         function handleBackPressed() {
