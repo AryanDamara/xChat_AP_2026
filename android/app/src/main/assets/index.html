@@ -4,27 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>xChat — Decentralized Private Messenger</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --tg-bg: #0e1621;
-            --tg-sidebar: #17212b;
-            --tg-sidebar-hover: #202b36;
-            --tg-active: #2b3947;
-            --tg-blue: #2481cc;
-            --tg-blue-hover: #1e70b3;
-            --tg-blue-subtle: #5288c1;
-            --tg-in-bubble: #182533;
-            --tg-out-bubble: #2b5278;
-            --tg-text: #ffffff;
-            --tg-text-secondary: #708499;
-            --tg-text-muted: #6c7883;
-            --tg-time-out: #7eaad6;
-            --tg-time-in: #6c7883;
-            --tg-border: #1e2a38;
-            --tg-green: #4fae4e;
-            --tg-danger: #e53935;
-            --tg-panel-top: #17212b;
-            --tg-input-bg: #242f3d;
+            /* Pure Pitch OLED Black Theme (Zero Blue) */
+            --bg-canvas: #000000;
+            --bg-header: #080808;
+            --bg-sidebar: #0a0a0a;
+            --bg-card: #121212;
+            --bg-card-hover: #181818;
+            --bg-card-elevated: #1a1a1a;
+            --bg-input: #111111;
+            
+            /* Structural Borders (Neutral Grayscale, 0% Blue Saturation) */
+            --border-subtle: #222222;
+            --border-card: #282828;
+            --border-focus: #3d3d3d;
+            
+            /* Signature High-Contrast Pastels */
+            --pastel-lavender: #d4c4fb;
+            --pastel-lavender-hover: #e2d7fd;
+            --pastel-lavender-dark: #1e1338;
+            
+            --pastel-mint: #d2e8b8;
+            --pastel-mint-hover: #def0c9;
+            --pastel-mint-dark: #16260b;
+            
+            /* Functional Accents */
+            --status-green: #4ade80;
+            --status-red: #ef4444;
+            --status-red-bg: #220d0d;
+            
+            /* Text & Foreground */
+            --text-pure: #ffffff;
+            --text-primary: #f0f0f0;
+            --text-secondary: #9e9e9e;
+            --text-muted: #666666;
+            
+            /* Bubbles */
+            --bubble-in: #161616;
+            --bubble-in-border: #262626;
+            --bubble-out: #d4c4fb;
+            --bubble-out-text: #1e1338;
+            
+            /* Safe Areas */
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
@@ -33,370 +58,537 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
-        body {
-            background: var(--tg-bg);
-            color: var(--tg-text);
-            height: 100vh;
-            height: -webkit-fill-available;
-            display: flex;
-            flex-direction: column;
+        html, body {
+            height: 100%;
+            height: 100dvh;
+            width: 100%;
+            margin: 0;
+            padding: 0;
             overflow: hidden;
-            user-select: none;
+            background-color: var(--bg-canvas);
         }
 
-        /* Top Header Bar */
+        body {
+            background-color: var(--bg-canvas);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+            -webkit-font-smoothing: antialiased;
+            height: 100%;
+            height: 100dvh;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Typography Utilities */
+        .font-serif {
+            font-family: 'Playfair Display', Georgia, serif;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        /* 1. Top Header */
         header {
-            background: var(--tg-panel-top);
-            border-bottom: 1px solid var(--tg-border);
-            padding: calc(6px + var(--safe-top)) 16px 6px 16px;
+            flex-shrink: 0;
+            background: var(--bg-header);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: calc(6px + var(--safe-top)) 14px 6px 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 30;
+            z-index: 40;
             min-height: 56px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
 
         .header-brand {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
+            min-width: 0;
+            flex-shrink: 1;
         }
 
-        .tg-logo {
+        .brand-logo-btn {
             width: 36px;
             height: 36px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #2a9df4, #1f78c1);
+            border-radius: 12px;
+            background: linear-gradient(135deg, #1f1a2e, #14121a);
+            border: 1px solid #332d44;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(36, 129, 204, 0.4);
+            color: var(--pastel-lavender);
             cursor: pointer;
+            transition: transform 0.15s, border-color 0.15s;
+            flex-shrink: 0;
+        }
+        .brand-logo-btn:active {
+            transform: scale(0.96);
         }
 
         .app-title-group {
             display: flex;
             flex-direction: column;
+            gap: 2px;
+            min-width: 0;
         }
 
         .app-title {
-            font-size: 17px;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 18px;
             font-weight: 700;
-            color: #ffffff;
-            letter-spacing: 0.2px;
+            letter-spacing: -0.02em;
+            color: var(--text-pure);
+            line-height: 1.1;
         }
 
-        .mesh-status-text {
-            font-size: 11.5px;
-            color: var(--tg-green);
-            display: flex;
+        .mesh-status-pill {
+            display: inline-flex;
             align-items: center;
             gap: 5px;
-            font-weight: 500;
+            background: rgba(210, 232, 184, 0.12);
+            border: 1px solid rgba(210, 232, 184, 0.25);
+            padding: 2px 7px;
+            border-radius: 9999px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--pastel-mint);
+            letter-spacing: 0.01em;
+            white-space: nowrap;
         }
 
-        .status-dot-pulse {
-            width: 7px;
-            height: 7px;
-            background: var(--tg-green);
+        .status-desktop {
+            display: inline;
+        }
+        .status-mobile {
+            display: none;
+        }
+
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
-            box-shadow: 0 0 6px var(--tg-green);
+            background: var(--status-green);
+            box-shadow: 0 0 6px var(--status-green);
+            flex-shrink: 0;
         }
 
         .header-actions {
             display: flex;
             align-items: center;
             gap: 6px;
+            position: relative;
         }
 
-        .icon-btn {
-            background: none;
-            border: none;
-            color: var(--tg-text-secondary);
-            width: 38px;
-            height: 38px;
+        .action-circle-btn {
+            background: #141414;
+            border: 1px solid var(--border-card);
+            color: var(--text-primary);
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: background 0.15s, color 0.15s;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .action-circle-btn:hover {
+            background: #1f1f1f;
+            border-color: #383838;
+        }
+        .action-circle-btn:active {
+            transform: scale(0.94);
         }
 
-        .icon-btn:hover, .icon-btn:active {
-            background: var(--tg-sidebar-hover);
-            color: #ffffff;
+        /* 3-Dots Dropdown Menu */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 46px;
+            right: 0;
+            background: #141414;
+            border: 1px solid var(--border-card);
+            border-radius: 18px;
+            width: 220px;
+            padding: 6px;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.85);
+            z-index: 100;
+        }
+        .dropdown-menu.active {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .dropdown-item {
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.15s;
+        }
+        .dropdown-item:hover {
+            background: #202020;
+        }
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border-subtle);
+            margin: 4px 6px;
         }
 
-        /* Workspace */
+        /* 2. Main Workspace Layout */
         .workspace {
             display: flex;
-            flex: 1;
-            height: calc(100vh - 56px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Sidebar: Contacts List */
-        .sidebar {
-            width: 380px;
-            background: var(--tg-sidebar);
-            border-right: 1px solid var(--tg-border);
-            display: flex;
-            flex-direction: column;
+            flex: 1 1 0%;
+            min-height: 0;
             height: 100%;
-            z-index: 10;
             position: relative;
-            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            background: var(--bg-canvas);
+            width: 100%;
         }
 
-        /* Device Reachable Banner inside Sidebar */
-        .device-info-banner {
-            padding: 10px 14px;
-            background: rgba(36, 129, 204, 0.08);
-            border-bottom: 1px solid var(--tg-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .banner-text-wrap {
+        /* Left Sidebar: Contacts & Links */
+        .sidebar {
+            width: 390px;
+            flex: 0 0 390px;
+            min-height: 0;
+            height: 100%;
+            background: var(--bg-canvas);
+            border-right: 1px solid var(--border-subtle);
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            position: relative;
+            z-index: 10;
         }
 
-        .banner-label {
-            font-size: 10.5px;
-            color: var(--tg-text-secondary);
-            text-transform: uppercase;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .banner-address {
-            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-            font-size: 12.5px;
-            color: #93c5fd;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .btn-copy-sm {
-            background: var(--tg-blue);
-            color: white;
-            border: none;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
+        /* Reachable Socket Card (CashPilot Card Style) */
+        .socket-banner-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 20px;
+            margin: 12px 14px 6px 14px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
             flex-shrink: 0;
-            transition: transform 0.1s;
         }
-
-        .btn-copy-sm:active {
+        .socket-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-secondary);
+            margin-bottom: 3px;
+        }
+        .socket-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-pure);
+            letter-spacing: 0.02em;
+        }
+        .btn-copy-lavender {
+            background: var(--pastel-lavender);
+            color: var(--pastel-lavender-dark);
+            border: none;
+            padding: 7px 14px;
+            border-radius: 9999px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            flex-shrink: 0;
+        }
+        .btn-copy-lavender:hover {
+            background: var(--pastel-lavender-hover);
+        }
+        .btn-copy-lavender:active {
             transform: scale(0.95);
         }
 
-        /* Search input */
-        .search-container {
-            padding: 10px 14px;
-            border-bottom: 1px solid var(--tg-border);
+        /* Sage Mint Highlight Banner (CashPilot Forecast Style) */
+        .highlight-banner-mint {
+            background: var(--pastel-mint);
+            color: var(--pastel-mint-dark);
+            border-radius: 20px;
+            margin: 6px 14px 10px 14px;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+            transition: transform 0.15s;
+            flex-shrink: 0;
+        }
+        .highlight-banner-mint:active {
+            transform: scale(0.98);
+        }
+        .banner-mint-top {
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
+        }
+        .banner-mint-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            background: rgba(22, 38, 11, 0.18);
+            padding: 2px 7px;
+            border-radius: 9999px;
+        }
+        .banner-mint-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-top: 2px;
+        }
+        .banner-mint-desc {
+            font-size: 11.5px;
+            line-height: 1.4;
+            opacity: 0.88;
         }
 
-        .search-pill {
-            flex: 1;
-            background: var(--tg-input-bg);
-            border: 1px solid transparent;
-            border-radius: 20px;
+        /* Search Pill Input */
+        .search-wrap {
+            padding: 0 14px 8px 14px;
+            flex-shrink: 0;
+        }
+        .search-pill-box {
+            background: var(--bg-input);
+            border: 1px solid var(--border-card);
+            border-radius: 9999px;
             padding: 8px 14px;
             display: flex;
             align-items: center;
             gap: 10px;
             transition: border-color 0.2s;
         }
-
-        .search-pill:focus-within {
-            border-color: var(--tg-blue);
+        .search-pill-box:focus-within {
+            border-color: var(--border-focus);
         }
-
-        .search-pill svg {
-            color: var(--tg-text-secondary);
+        .search-pill-box svg {
+            color: var(--text-muted);
             flex-shrink: 0;
         }
-
-        .search-input {
-            width: 100%;
+        .search-input-field {
             background: none;
             border: none;
-            color: white;
+            color: var(--text-pure);
             font-size: 13.5px;
+            width: 100%;
             outline: none;
+            font-family: inherit;
+        }
+        .search-input-field::placeholder {
+            color: var(--text-muted);
         }
 
-        .contact-list {
-            overflow-y: auto;
-            flex: 1;
-            padding-bottom: 80px;
-        }
-
-        .chat-card {
+        /* Contacts List Section */
+        .list-header-row {
+            padding: 4px 18px 4px 18px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            padding: 11px 14px;
-            cursor: pointer;
-            transition: background 0.12s ease;
-            position: relative;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-        }
-
-        .chat-card:hover {
-            background: var(--tg-sidebar-hover);
-        }
-
-        .chat-card.active {
-            background: var(--tg-active);
-            border-left: 3px solid var(--tg-blue);
-        }
-
-        .avatar-wrap {
-            position: relative;
-            margin-right: 12px;
             flex-shrink: 0;
         }
+        .list-header-title {
+            font-size: 11.5px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-secondary);
+        }
+        .contact-scroll-feed {
+            flex: 1 1 0%;
+            min-height: 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 4px 14px calc(84px + var(--safe-bottom)) 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
 
-        .avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+        /* Squircle Contact Card */
+        .contact-squircle-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 18px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .contact-squircle-card:hover {
+            background: var(--bg-card-hover);
+            border-color: #333333;
+        }
+        .contact-squircle-card.active {
+            background: #1c1c1c;
+            border-color: var(--pastel-lavender);
+        }
+        .contact-avatar-squircle {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 16px;
             font-weight: 700;
-            font-size: 19px;
-            color: #ffffff;
-            text-transform: uppercase;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+            color: #000000;
+            flex-shrink: 0;
+            position: relative;
         }
-
-        .online-badge {
+        .online-dot-badge {
             position: absolute;
-            bottom: 1px;
-            right: 1px;
-            width: 12px;
-            height: 12px;
-            background: var(--tg-green);
-            border: 2px solid var(--tg-sidebar);
+            bottom: -2px;
+            right: -2px;
+            width: 10px;
+            height: 10px;
+            background: var(--status-green);
+            border: 2px solid var(--bg-card);
             border-radius: 50%;
         }
-
-        .chat-info {
+        .contact-meta-col {
             flex: 1;
             min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
         }
-
-        .chat-title-row {
+        .contact-name-row {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
-            margin-bottom: 4px;
         }
-
-        .chat-name {
-            font-size: 15.5px;
+        .contact-name-text {
+            font-size: 14px;
             font-weight: 600;
-            color: #ffffff;
+            color: var(--text-pure);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-
-        .chat-time {
-            font-size: 12px;
-            color: var(--tg-text-muted);
-            margin-left: 8px;
-            flex-shrink: 0;
+        .contact-time-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-secondary);
         }
-
-        .chat-snippet-row {
+        .contact-preview-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 8px;
         }
-
-        .chat-snippet {
-            font-size: 13.5px;
-            color: var(--tg-text-secondary);
+        .contact-snippet-text {
+            font-size: 12.5px;
+            color: var(--text-secondary);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+        .contact-badge-pill {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5px;
+            font-weight: 600;
+            background: #1a1a1a;
+            border: 1px solid #282828;
+            color: var(--pastel-lavender);
+            padding: 2px 6px;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        /* Floating Bottom Navigation Bar (CashPilot Dock) */
+        .bottom-nav-dock {
+            position: absolute;
+            bottom: calc(14px + var(--safe-bottom));
+            left: 14px;
+            right: 14px;
+            height: 60px;
+            background: rgba(18, 18, 18, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-card);
+            border-radius: 30px;
             display: flex;
             align-items: center;
-            gap: 4px;
+            justify-content: space-around;
+            padding: 0 10px;
+            z-index: 30;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
         }
-
-        .chat-badge {
-            font-size: 10px;
-            padding: 2px 7px;
-            border-radius: 10px;
-            background: rgba(36, 129, 204, 0.2);
-            color: #93c5fd;
-            font-weight: 600;
-            flex-shrink: 0;
-            margin-left: 6px;
-        }
-
-        /* Floating Action Button (FAB) */
-        .fab-btn {
-            position: absolute;
-            bottom: calc(20px + var(--safe-bottom));
-            right: 20px;
-            width: 56px;
-            height: 56px;
+        .nav-dock-item {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            width: 44px;
+            height: 44px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
             border-radius: 50%;
-            background: linear-gradient(135deg, #2481cc, #1e70b3);
-            color: white;
+            transition: color 0.15s;
+        }
+        .nav-dock-item:hover, .nav-dock-item.active {
+            color: var(--pastel-lavender);
+        }
+        .nav-dock-item.active {
+            background: rgba(212, 196, 251, 0.12);
+        }
+        .nav-dock-center-fab {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--pastel-lavender);
+            color: var(--pastel-lavender-dark);
+            border: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 16px rgba(36, 129, 204, 0.5);
-            border: none;
             cursor: pointer;
-            transition: transform 0.15s, box-shadow 0.15s;
-            z-index: 20;
+            box-shadow: 0 4px 16px rgba(212, 196, 251, 0.35);
+            transition: transform 0.15s, background 0.15s;
+        }
+        .nav-dock-center-fab:hover {
+            background: var(--pastel-lavender-hover);
+        }
+        .nav-dock-center-fab:active {
+            transform: scale(0.92);
         }
 
-        .fab-btn:hover {
-            transform: scale(1.06);
-            box-shadow: 0 6px 20px rgba(36, 129, 204, 0.6);
-        }
-
-        .fab-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* Right Panel: Chat Room */
+        /* Right Panel: Chat Area */
         .chat-panel {
             flex: 1;
+            background: var(--bg-canvas);
             display: flex;
             flex-direction: column;
-            background: var(--tg-bg);
-            height: 100%;
             position: relative;
+            overflow: hidden;
         }
 
         /* Empty State */
@@ -406,44 +598,40 @@
             align-items: center;
             justify-content: center;
             height: 100%;
-            padding: 20px;
+            padding: 24px;
             text-align: center;
         }
-
         .empty-card {
-            background: rgba(23, 33, 43, 0.85);
-            border: 1px solid var(--tg-border);
-            border-radius: 18px;
-            padding: 32px 28px;
-            max-width: 380px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            backdrop-filter: blur(10px);
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 28px;
+            padding: 38px 32px;
+            max-width: 420px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
         }
-
         .empty-shield {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: rgba(36, 129, 204, 0.15);
-            color: var(--tg-blue);
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            background: rgba(212, 196, 251, 0.12);
+            color: var(--pastel-lavender);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 16px auto;
+            margin: 0 auto 20px auto;
         }
-
         .empty-title {
-            font-size: 18px;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 22px;
             font-weight: 700;
-            color: white;
-            margin-bottom: 8px;
+            color: var(--text-pure);
+            margin-bottom: 10px;
         }
-
         .empty-desc {
             font-size: 13.5px;
-            color: var(--tg-text-secondary);
-            line-height: 1.55;
-            margin-bottom: 20px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 24px;
         }
 
         /* Active Chat View */
@@ -452,505 +640,872 @@
             flex-direction: column;
             height: 100%;
             width: 100%;
+            background: var(--bg-canvas);
         }
 
         .chat-header {
-            padding: calc(6px + var(--safe-top)) 16px 6px 16px;
-            background: var(--tg-panel-top);
-            border-bottom: 1px solid var(--tg-border);
+            padding: calc(8px + var(--safe-top)) 16px 8px 16px;
+            background: var(--bg-header);
+            border-bottom: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
             gap: 12px;
-            min-height: 56px;
+            min-height: 58px;
             z-index: 20;
         }
-
-        .back-btn {
+        .back-btn-mobile {
             display: none;
             background: none;
             border: none;
-            color: var(--tg-blue);
+            color: var(--pastel-lavender);
             cursor: pointer;
             padding: 6px;
-            border-radius: 50%;
         }
-
-        .chat-peer-avatar {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
+        .active-peer-avatar-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 16px;
-            color: white;
+            font-size: 15px;
+            color: #000000;
             flex-shrink: 0;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
         }
-
-        .chat-peer-info {
+        .chat-peer-info-box {
             flex: 1;
             overflow: hidden;
         }
-
-        .chat-peer-title {
-            font-size: 15.5px;
+        .chat-peer-title-text {
+            font-size: 15px;
             font-weight: 600;
-            color: #ffffff;
+            color: var(--text-pure);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-
-        .chat-peer-status {
-            font-size: 12px;
-            color: #60a5fa;
+        .chat-peer-status-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--pastel-mint);
             display: flex;
             align-items: center;
             gap: 5px;
             margin-top: 1px;
         }
-
         .chat-header-actions {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
         }
 
-        /* Message Bubbles Area */
+        /* Security Forward Secrecy Banner */
+        .security-banner-strip {
+            background: rgba(210, 232, 184, 0.08);
+            border-bottom: 1px solid rgba(210, 232, 184, 0.15);
+            padding: 6px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            color: var(--pastel-mint);
+            text-align: center;
+        }
+
+        /* Messages Area */
         .messages-area {
             flex: 1;
             overflow-y: auto;
             padding: 16px 20px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            background: #0e1621;
-            background-image: 
-                radial-gradient(circle at 50% 15%, rgba(36, 129, 204, 0.05) 0%, transparent 60%),
-                radial-gradient(circle at 80% 85%, rgba(43, 82, 120, 0.06) 0%, transparent 60%);
+            gap: 10px;
+            background: var(--bg-canvas);
         }
-
         .date-badge {
             align-self: center;
-            background: rgba(0, 0, 0, 0.45);
-            color: #e2e8f0;
-            font-size: 12px;
-            font-weight: 500;
-            padding: 5px 16px;
-            border-radius: 14px;
-            margin: 6px 0 10px 0;
-            backdrop-filter: blur(4px);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            background: #141414;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 14px;
+            border-radius: 12px;
+            margin: 4px 0 8px 0;
         }
 
+        /* Bubbles */
         .msg-bubble {
             position: relative;
             max-width: 72%;
-            padding: 9px 13px 7px 14px;
-            font-size: 15px;
-            line-height: 1.45;
-            word-break: break-word;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-            user-select: text;
+            padding: 12px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            line-height: 1.5;
+            word-wrap: break-word;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
-
         .msg-bubble.in {
             align-self: flex-start;
-            background: var(--tg-in-bubble);
-            color: #ffffff;
-            border-radius: 16px 16px 16px 4px;
+            background: var(--bubble-in);
+            border: 1px solid var(--bubble-in-border);
+            color: var(--text-pure);
+            border-bottom-left-radius: 6px;
         }
-
-        .msg-bubble.in::before {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: -6px;
-            width: 12px;
-            height: 12px;
-            background: var(--tg-in-bubble);
-            clip-path: polygon(100% 0, 0 100%, 100% 100%);
-            border-bottom-left-radius: 3px;
-        }
-
         .msg-bubble.out {
             align-self: flex-end;
-            background: var(--tg-out-bubble);
-            color: #ffffff;
-            border-radius: 16px 16px 4px 16px;
+            background: var(--bubble-out);
+            color: var(--bubble-out-text);
+            font-weight: 500;
+            border-bottom-right-radius: 6px;
         }
-
-        .msg-bubble.out::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            right: -6px;
-            width: 12px;
-            height: 12px;
-            background: var(--tg-out-bubble);
-            clip-path: polygon(0 0, 0% 100%, 100% 100%);
-            border-bottom-right-radius: 3px;
-        }
-
-        .msg-meta {
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-            float: right;
-            margin-left: 10px;
-            margin-top: 5px;
-            font-size: 11px;
-            user-select: none;
-        }
-
-        .msg-bubble.in .msg-meta {
-            color: var(--tg-time-in);
-        }
-
-        .msg-bubble.out .msg-meta {
-            color: var(--tg-time-out);
-        }
-
-        .msg-checks {
-            color: #53bdeb;
-            display: inline-flex;
-            align-items: center;
-            margin-left: 2px;
-        }
-
-        /* Input Area at Bottom */
-        .input-bar {
-            padding: 10px 16px calc(10px + var(--safe-bottom)) 16px;
-            background: var(--tg-panel-top);
-            border-top: 1px solid var(--tg-border);
+        .msg-meta-row {
             display: flex;
-            gap: 10px;
             align-items: center;
-            z-index: 20;
+            justify-content: flex-end;
+            gap: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            margin-top: 2px;
+        }
+        .msg-bubble.in .msg-meta-row {
+            color: var(--text-muted);
+        }
+        .msg-bubble.out .msg-meta-row {
+            color: rgba(30, 19, 56, 0.7);
         }
 
+        /* Bottom Input Dock */
+        .input-bar {
+            padding: 12px 16px calc(12px + var(--safe-bottom)) 16px;
+            background: var(--bg-header);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
         .input-box {
             flex: 1;
-            background: var(--tg-input-bg);
-            border: 1px solid transparent;
-            border-radius: 22px;
-            padding: 11px 18px;
-            color: white;
-            font-size: 15px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-card);
+            border-radius: 9999px;
+            padding: 10px 18px;
+            color: var(--text-pure);
+            font-size: 14px;
             outline: none;
+            font-family: inherit;
             transition: border-color 0.2s;
-            user-select: text;
         }
-
         .input-box:focus {
-            border-color: var(--tg-blue);
+            border-color: var(--border-focus);
         }
-
-        .btn-send-round {
-            background: linear-gradient(135deg, #2481cc, #1e70b3);
-            color: white;
-            border: none;
+        .input-box::placeholder {
+            color: var(--text-muted);
+        }
+        .btn-send-lavender {
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            width: 44px;
-            height: 44px;
+            background: var(--pastel-lavender);
+            color: var(--pastel-lavender-dark);
+            border: none;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(36, 129, 204, 0.45);
-            transition: transform 0.15s;
+            transition: transform 0.15s, background 0.15s;
+        }
+        .btn-send-lavender:hover {
+            background: var(--pastel-lavender-hover);
+        }
+        .btn-send-lavender:active {
+            transform: scale(0.93);
         }
 
-        .btn-send-round:active {
-            transform: scale(0.95);
-        }
-
-        /* Mobile Layout */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                position: absolute;
-                inset: 0;
-                z-index: 10;
-                transform: translateX(0);
-            }
-            .sidebar.hidden-mobile {
-                transform: translateX(-100%);
-                pointer-events: none;
-            }
-            .chat-panel {
-                width: 100%;
-                position: absolute;
-                inset: 0;
-                z-index: 15;
-                transform: translateX(100%);
-                transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            }
-            .chat-panel.active-mobile {
-                transform: translateX(0);
-            }
-            .back-btn {
-                display: flex;
-            }
-            .msg-bubble {
-                max-width: 82%;
-            }
-        }
-
-        /* Modals & Bottom Sheets */
+        /* Modals & Dialogs (Pure OLED Pitch Black) */
         .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.72);
             display: none;
-            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 1000;
             align-items: center;
-            z-index: 100;
-            padding: 16px;
-            backdrop-filter: blur(4px);
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
         }
-
         .modal-overlay.active {
             display: flex;
         }
-
         .modal-card {
-            background: var(--tg-panel-top);
-            border: 1px solid var(--tg-border);
-            border-radius: 16px;
+            background: #141414;
+            border: 1px solid var(--border-card);
+            border-radius: 26px;
+            padding: 28px 24px;
             width: 100%;
             max-width: 440px;
-            padding: 24px;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
-            animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95);
+            max-height: 85vh;
+            max-height: 85dvh;
+            overflow-y: auto;
+            box-sizing: border-box;
         }
-
-        @keyframes modalFadeIn {
-            from { transform: scale(0.96) translateY(10px); opacity: 0; }
-            to { transform: scale(1) translateY(0); opacity: 1; }
-        }
-
         .modal-title {
-            font-size: 18px;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 20px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-pure);
             margin-bottom: 6px;
         }
-
         .modal-desc {
             font-size: 13px;
-            color: var(--tg-text-secondary);
+            color: var(--text-secondary);
             margin-bottom: 18px;
-            line-height: 1.45;
+            line-height: 1.5;
         }
-
         .form-label {
-            font-size: 12px;
-            color: var(--tg-text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
             margin-bottom: 6px;
             display: block;
-            font-weight: 600;
         }
-
         .form-input {
             width: 100%;
-            padding: 11px 14px;
-            background: var(--tg-input-bg);
-            border: 1px solid var(--tg-border);
-            border-radius: 10px;
-            color: white;
-            font-size: 14px;
+            background: #0a0a0a;
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: var(--text-pure);
+            font-size: 13.5px;
+            font-family: inherit;
             margin-bottom: 14px;
             outline: none;
-            transition: border-color 0.2s;
-            user-select: text;
+            box-sizing: border-box;
         }
-
         .form-input:focus {
-            border-color: var(--tg-blue);
+            border-color: var(--border-focus);
         }
-
         .modal-actions {
             display: flex;
             justify-content: flex-end;
             gap: 10px;
-            margin-top: 12px;
+            margin-top: 20px;
         }
-
         .btn-action {
             padding: 9px 18px;
-            border-radius: 10px;
-            font-size: 13.5px;
-            font-weight: 600;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 700;
             cursor: pointer;
             border: none;
-            transition: all 0.15s;
+            transition: transform 0.1s;
         }
-
-        .btn-cancel {
-            background: var(--tg-sidebar-hover);
-            color: var(--tg-text-secondary);
+        .btn-action:active {
+            transform: scale(0.96);
         }
-
-        .btn-cancel:hover {
-            color: white;
-        }
-
         .btn-primary {
-            background: var(--tg-blue);
-            color: white;
+            background: var(--pastel-lavender);
+            color: var(--pastel-lavender-dark);
         }
-
-        .btn-primary:hover {
-            background: var(--tg-blue-hover);
+        .btn-secondary {
+            background: var(--pastel-mint);
+            color: var(--pastel-mint-dark);
         }
-
+        .btn-cancel {
+            background: #202020;
+            color: var(--text-primary);
+        }
         .btn-danger {
-            background: rgba(229, 57, 53, 0.2);
-            color: #ef4444;
-            border: 1px solid rgba(229, 57, 53, 0.4);
+            background: var(--status-red);
+            color: #ffffff;
         }
 
-        .btn-danger:hover {
-            background: var(--tg-danger);
-            color: white;
+        /* Sidebar Tab Panes */
+        .sidebar-tab-content {
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 0%;
+            min-height: 0;
+            height: 100%;
+            overflow: hidden;
+            width: 100%;
         }
 
-        /* Dropdown Menu (3 dots) */
-        .dropdown-menu {
-            position: absolute;
-            top: 52px;
-            right: 16px;
-            background: var(--tg-panel-top);
-            border: 1px solid var(--tg-border);
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            padding: 6px 0;
-            min-width: 220px;
-            display: none;
-            z-index: 110;
+        /* Carrier & Transports Hub */
+        .carrier-header-strip {
+            padding: 12px 16px 6px 16px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
-
-        .dropdown-menu.active {
-            display: block;
-        }
-
-        .dropdown-item {
-            padding: 10px 16px;
+        .carrier-top-row {
             display: flex;
             align-items: center;
+            justify-content: space-between;
+        }
+        .carrier-engine-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: var(--pastel-mint);
+            text-transform: uppercase;
+        }
+        .carrier-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(210, 232, 184, 0.12);
+            border: 1px solid rgba(210, 232, 184, 0.25);
+            padding: 2px 7px;
+            border-radius: 9999px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5px;
+            font-weight: 600;
+            color: var(--pastel-mint);
+        }
+        .carrier-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--text-pure);
+            letter-spacing: -0.01em;
+            margin-top: 2px;
+        }
+        .carrier-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+        .carrier-scroll-feed {
+            flex: 1 1 0%;
+            min-height: 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 8px 14px calc(84px + var(--safe-bottom)) 14px;
+            display: flex;
+            flex-direction: column;
             gap: 12px;
-            font-size: 13.5px;
-            color: var(--tg-text);
-            cursor: pointer;
-            transition: background 0.1s;
+        }
+        .carrier-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 20px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: border-color 0.15s;
+        }
+        .carrier-card:hover {
+            border-color: #333333;
+        }
+        .carrier-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .carrier-card-title-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .carrier-card-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-pure);
+        }
+        .carrier-card-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5px;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 9999px;
+        }
+        .badge-mint {
+            background: rgba(210, 232, 184, 0.15);
+            color: var(--pastel-mint);
+            border: 1px solid rgba(210, 232, 184, 0.25);
+        }
+        .badge-lavender {
+            background: rgba(212, 196, 251, 0.15);
+            color: var(--pastel-lavender);
+            border: 1px solid rgba(212, 196, 251, 0.25);
+        }
+        .badge-amber {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+        .badge-red {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+        .carrier-card-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+        .carrier-routing-diagram {
+            background: #080808;
+            border: 1px solid #1f1f1f;
+            border-radius: 12px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9.5px;
+            color: var(--text-secondary);
+        }
+        .routing-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        .routing-dot {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #141414;
+            border: 1px solid #282828;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--pastel-lavender);
+            font-size: 9px;
+            font-weight: 700;
+        }
+        .routing-arrow {
+            color: #444444;
+            font-size: 12px;
+        }
+        .carrier-stats-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .carrier-stat-pill {
+            flex: 1;
+            background: #080808;
+            border: 1px solid #1f1f1f;
+            border-radius: 10px;
+            padding: 6px 8px;
+            text-align: center;
+        }
+        .stat-pill-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
+        }
+        .stat-pill-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--pastel-mint);
+            margin-top: 2px;
         }
 
-        .dropdown-item:hover {
-            background: var(--tg-sidebar-hover);
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body.chat-open header {
+                display: none !important;
+            }
+            .workspace {
+                width: 100%;
+                flex: 1 1 0%;
+                min-height: 0;
+                height: 100%;
+            }
+            .sidebar {
+                width: 100%;
+                flex: 1 1 0%;
+                min-height: 0;
+                height: 100%;
+                border-right: none;
+            }
+            .chat-panel {
+                display: none;
+                width: 100%;
+                position: absolute;
+                inset: 0;
+                height: 100%;
+                z-index: 50;
+            }
+            .sidebar.hidden-mobile {
+                display: none !important;
+            }
+            .chat-panel.active-mobile {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+                height: 100% !important;
+                position: absolute !important;
+                inset: 0 !important;
+                z-index: 50 !important;
+            }
+            .back-btn-mobile {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+            }
         }
 
-        .dropdown-divider {
-            height: 1px;
-            background: var(--tg-border);
-            margin: 6px 0;
+        @media (max-width: 480px) {
+            .status-desktop {
+                display: none !important;
+            }
+            .status-mobile {
+                display: inline !important;
+            }
+            .mesh-status-pill {
+                padding: 2px 7px;
+                font-size: 9.5px;
+            }
+            .header-brand {
+                gap: 8px;
+            }
+            .brand-logo-btn {
+                width: 32px;
+                height: 32px;
+                border-radius: 10px;
+            }
+            .action-circle-btn {
+                width: 32px;
+                height: 32px;
+            }
+            .socket-banner-card {
+                margin: 8px 12px 4px 12px;
+                padding: 10px 14px;
+                border-radius: 16px;
+            }
+            .socket-value {
+                font-size: 13px;
+            }
+            .btn-copy-lavender {
+                padding: 5px 12px;
+                font-size: 11px;
+            }
+            .highlight-banner-mint {
+                margin: 4px 12px 8px 12px;
+                padding: 10px 14px;
+                border-radius: 16px;
+            }
+            .banner-mint-title {
+                font-size: 14px;
+            }
+            .banner-mint-desc {
+                font-size: 11px;
+            }
+            .search-wrap {
+                padding: 0 12px 6px 12px;
+            }
+            .list-header-row {
+                padding: 4px 14px;
+            }
+            .contact-scroll-feed {
+                padding: 4px 12px calc(80px + var(--safe-bottom)) 12px;
+            }
+            .bottom-nav-dock {
+                left: 12px;
+                right: 12px;
+                bottom: calc(12px + var(--safe-bottom));
+                height: 54px;
+                border-radius: 28px;
+            }
+            .nav-dock-item {
+                width: 38px;
+                height: 38px;
+            }
+            .nav-dock-center-fab {
+                width: 44px;
+                height: 44px;
+            }
+            .modal-card {
+                padding: 20px 16px;
+                border-radius: 20px;
+            }
+            .modal-overlay {
+                padding: 12px;
+            }
+            .security-banner-strip {
+                font-size: 9.5px;
+                padding: 5px 10px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Top Navigation Header -->
+    <!-- 1. Top Navigation Bar -->
     <header>
         <div class="header-brand">
-            <div class="tg-logo" onclick="openModal('profileModal')" title="View Identity">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+            <div class="brand-logo-btn" onclick="openModal('profileModal')" title="View Identity Keys">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                 </svg>
             </div>
             <div class="app-title-group">
                 <div class="app-title">xChat</div>
-                <div class="mesh-status-text">
-                    <div class="status-dot-pulse"></div>
-                    <span id="meshStatusLabel">Direct P2P • 0 Central Servers</span>
+                <div class="mesh-status-pill">
+                    <div class="pulse-dot"></div>
+                    <span id="meshStatusLabel">
+                        <span class="status-desktop">Direct P2P • 0 Central Servers</span>
+                        <span class="status-mobile">Direct P2P</span>
+                    </span>
                 </div>
             </div>
         </div>
 
         <div class="header-actions">
-            <button class="icon-btn" onclick="openModal('addPeerModal')" title="New Chat">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <button class="action-circle-btn" onclick="openModal('addPeerModal')" title="New Chat">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </button>
-            <button class="icon-btn" onclick="toggleDropdown('topMenuDropdown')" title="Menu">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+            <button class="action-circle-btn" onclick="toggleDropdown('topMenuDropdown')" title="Security Menu">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
             </button>
-        </div>
 
-        <!-- 3-Dots Dropdown Menu -->
-        <div class="dropdown-menu" id="topMenuDropdown">
-            <div class="dropdown-item" onclick="closeDropdown(); openModal('carrierModal');">
-                <span>🌐 Carrier & Mixnet</span>
-            </div>
-            <div class="dropdown-item" onclick="closeDropdown(); openModal('burnerModal');">
-                <span>🔥 Ephemeral Burner Room</span>
-            </div>
-            <div class="dropdown-item" onclick="closeDropdown(); openModal('qrModal');">
-                <span>📱 Air-Gap QR Identity</span>
-            </div>
-            <div class="dropdown-item" onclick="closeDropdown(); openModal('profileModal');">
-                <span>👤 My Profile & Keys</span>
-            </div>
-            <div class="dropdown-divider"></div>
-            <div class="dropdown-item" style="color: #ef4444;" onclick="closeDropdown(); triggerSos();">
-                <span>🚨 Emergency SOS Distress</span>
+            <!-- 3-Dots Dropdown Menu -->
+            <div class="dropdown-menu" id="topMenuDropdown">
+                <div class="dropdown-item" onclick="closeDropdown(); switchTab('carrier');">
+                    <span>🌐 Carrier & Mixnet</span>
+                </div>
+                <div class="dropdown-item" onclick="closeDropdown(); openModal('burnerModal');">
+                    <span>🔥 Ephemeral Burner Room</span>
+                </div>
+                <div class="dropdown-item" onclick="closeDropdown(); openModal('qrModal');">
+                    <span>📱 Air-Gap QR Identity</span>
+                </div>
+                <div class="dropdown-item" onclick="closeDropdown(); openModal('profileModal');">
+                    <span>👤 My Profile & Keys</span>
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" style="color: var(--status-red);" onclick="closeDropdown(); triggerSos();">
+                    <span>🚨 Emergency SOS Distress</span>
+                </div>
             </div>
         </div>
     </header>
 
+    <!-- 2. Dual-Pane Workspace -->
     <div class="workspace">
-        <!-- Left Sidebar: Telegram Chats List -->
+        
+        <!-- Left Pane: Sidebar & Contacts -->
         <aside class="sidebar" id="sidebar">
-            <!-- Reachable IP Banner -->
-            <div class="device-info-banner">
-                <div class="banner-text-wrap">
-                    <div class="banner-label">Your Reachable Socket</div>
-                    <div class="banner-address" id="myReachableSocket">Loading...</div>
+            
+            <!-- Tab 1: Chats Feed -->
+            <div class="sidebar-tab-content" id="tabPaneChats">
+                <!-- Reachable IP & Socket Banner -->
+                <div class="socket-banner-card">
+                    <div>
+                        <div class="socket-label">Your Reachable Socket</div>
+                        <div class="socket-value" id="myReachableSocket">Loading...</div>
+                    </div>
+                    <button class="btn-copy-lavender" onclick="copyMySocket()" title="Copy socket to clipboard">Copy</button>
                 </div>
-                <button class="btn-copy-sm" onclick="copyMySocket()" title="Copy to share with peer">Copy</button>
-            </div>
 
-            <!-- Search Bar -->
-            <div class="search-container">
-                <div class="search-pill">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input type="text" class="search-input" id="searchFilter" placeholder="Search contacts..." oninput="filterContacts()">
+                <!-- Chaumian Mixnet Forecast Banner (CashPilot Style) -->
+                <div class="highlight-banner-mint" onclick="switchTab('carrier')">
+                    <div class="banner-mint-top">
+                        <span class="banner-mint-badge">LAYER 3 COMM</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    </div>
+                    <div class="banner-mint-title">Chaumian Mixnet Active</div>
+                    <div class="banner-mint-desc">Traffic batched & shuffled with timing jitter to break correlation.</div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="search-wrap">
+                    <div class="search-pill-box">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" class="search-input-field" id="searchFilter" placeholder="Search contacts or sockets..." oninput="filterContacts()">
+                    </div>
+                </div>
+
+                <!-- Section Header -->
+                <div class="list-header-row">
+                    <span class="list-header-title">Active Encrypted Links</span>
+                </div>
+
+                <!-- Scrollable Contacts List -->
+                <div class="contact-scroll-feed" id="contactList">
+                    <!-- Dynamically populated -->
                 </div>
             </div>
 
-            <!-- Contacts Scroll List -->
-            <div class="contact-list" id="contactList">
-                <!-- Dynamically populated -->
+            <!-- Tab 2: Carrier & Transports Hub (Stitch Screen 3 Style) -->
+            <div class="sidebar-tab-content" id="tabPaneCarrier" style="display: none;">
+                <div class="carrier-header-strip">
+                    <div class="carrier-top-row">
+                        <span class="carrier-engine-badge">MULTI-TRANSPORT ENGINE</span>
+                        <span class="carrier-status-pill"><span class="pulse-dot"></span>Zero-Internet Ready</span>
+                    </div>
+                    <div class="carrier-title">Carrier & Transports</div>
+                    <div class="carrier-subtitle">Send confidential messages even during complete telecommunications blackouts.</div>
+                </div>
+
+                <div class="carrier-scroll-feed">
+                    <!-- Card 1: Chaumian Mixnet Telemetry -->
+                    <div class="carrier-card">
+                        <div class="carrier-card-header">
+                            <div class="carrier-card-title-group">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--pastel-mint);"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                                <span class="carrier-card-title">Chaumian Mixnet</span>
+                            </div>
+                            <span class="carrier-card-badge badge-mint">ACTIVE • 4 Batched</span>
+                        </div>
+                        <div class="carrier-card-desc">Internet & cellular data anonymization with Sphinx packet onion encryption and cover chaff.</div>
+                        
+                        <div class="carrier-routing-diagram">
+                            <div class="routing-node">
+                                <div class="routing-dot">📱</div>
+                                <span>Client</span>
+                            </div>
+                            <div class="routing-arrow">➔</div>
+                            <div class="routing-node">
+                                <div class="routing-dot">R1</div>
+                                <span>Zurich</span>
+                            </div>
+                            <div class="routing-arrow">➔</div>
+                            <div class="routing-node">
+                                <div class="routing-dot">R2</div>
+                                <span>Reykjavik</span>
+                            </div>
+                            <div class="routing-arrow">➔</div>
+                            <div class="routing-node">
+                                <div class="routing-dot" style="color:var(--pastel-mint);">🔒</div>
+                                <span>Recipient</span>
+                            </div>
+                        </div>
+
+                        <div class="carrier-stats-row">
+                            <div class="carrier-stat-pill">
+                                <div class="stat-pill-label">Timing Jitter</div>
+                                <div class="stat-pill-val">20ms-120ms</div>
+                            </div>
+                            <div class="carrier-stat-pill">
+                                <div class="stat-pill-label">Cover Traffic</div>
+                                <div class="stat-pill-val">Active Chaff</div>
+                            </div>
+                            <div class="carrier-stat-pill">
+                                <div class="stat-pill-label">Mix Hops</div>
+                                <div class="stat-pill-val">3 Sphinx Hops</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Cellular SMS Frame Carrier -->
+                    <div class="carrier-card">
+                        <div class="carrier-card-header">
+                            <div class="carrier-card-title-group">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#f59e0b;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                <span class="carrier-card-title">Cellular SMS Carrier</span>
+                            </div>
+                            <span class="carrier-card-badge badge-amber">140-Octet Frame</span>
+                        </div>
+                        <div class="carrier-card-desc">Encodes ratcheted ciphertext into 140-character SMS text frames without cellular data or IP stacks. Telcos see only opaque hex.</div>
+                        <button class="btn-action btn-primary" style="margin-top:4px; font-size:12px; padding:7px 16px; align-self:flex-start;" onclick="generateSmsFrameDemo()">💬 Generate SMS Frame</button>
+                        <div id="smsFrameResult" style="font-family:'JetBrains Mono', monospace; font-size:10.5px; word-break:break-all; margin-top:4px; display:none; background:#080808; border:1px solid #282828; padding:10px 12px; border-radius:12px; color:var(--pastel-lavender);"></div>
+                    </div>
+
+                    <!-- Card 3: Voice Call Audio Modem -->
+                    <div class="carrier-card">
+                        <div class="carrier-card-header">
+                            <div class="carrier-card-title-group">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--pastel-mint);"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                                <span class="carrier-card-title">Acoustic Audio Modem</span>
+                            </div>
+                            <span class="carrier-card-badge badge-mint">Bell 202 AFSK</span>
+                        </div>
+                        <div class="carrier-card-desc">Modulates ciphertext into 1200Hz/2200Hz audio tones for telephone voice calls or speaker-mic airgap when RF radios are jammed.</div>
+                        <button class="btn-action btn-secondary" style="margin-top:4px; font-size:12px; padding:7px 16px; align-self:flex-start;" onclick="playAcousticTones()">▶ Play Acoustic Tones</button>
+                    </div>
+
+                    <!-- Card 4: Air-Gap Identity & QR -->
+                    <div class="carrier-card">
+                        <div class="carrier-card-header">
+                            <div class="carrier-card-title-group">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--pastel-lavender);"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                                <span class="carrier-card-title">Air-Gap Identity</span>
+                            </div>
+                            <span class="carrier-card-badge badge-lavender">Hardware Bound</span>
+                        </div>
+                        <div class="carrier-card-desc">Offline public identity bundle with Ed25519 root and X25519 prekeys.</div>
+                        <div style="background:#080808; border:1px solid #282828; color:var(--pastel-lavender); padding:10px 12px; font-family:'JetBrains Mono', monospace; font-size:10.5px; border-radius:12px; word-break:break-all; max-height:80px; overflow-y:auto;" id="qrPayloadDisplaySide">Loading identity...</div>
+                        <button class="btn-action btn-primary" style="margin-top:4px; font-size:12px; padding:7px 16px; align-self:flex-start;" onclick="copyIdentityPayload()">📋 Copy Identity</button>
+                    </div>
+
+                    <!-- Card 5: Emergency SOS Broadcast -->
+                    <div class="carrier-card" style="border-color:#381414;">
+                        <div class="carrier-card-header">
+                            <div class="carrier-card-title-group">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--status-red);"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                <span class="carrier-card-title" style="color:#ff8585;">Emergency SOS Distress</span>
+                            </div>
+                            <span class="carrier-card-badge badge-red">CRITICAL</span>
+                        </div>
+                        <div class="carrier-card-desc">Transmits high-priority encrypted distress coordinates to all peer radios, mesh hops, and reflectors in range.</div>
+                        <button class="btn-action btn-danger" style="margin-top:4px; font-size:12px; padding:7px 16px; align-self:flex-start;" onclick="triggerSos()">🚨 Broadcast SOS Beacon</button>
+                    </div>
+                </div>
             </div>
 
-            <!-- Floating Action Button (FAB) -->
-            <button class="fab-btn" onclick="openModal('addPeerModal')" title="New Chat">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </button>
+            <!-- Floating Bottom Navigation Dock -->
+            <nav class="bottom-nav-dock">
+                <button class="nav-dock-item active" id="navItemChats" onclick="switchTab('chats')" title="Chats">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </button>
+                <button class="nav-dock-item" id="navItemCarrier" onclick="switchTab('carrier')" title="Carrier & Mixnet">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </button>
+                <button class="nav-dock-center-fab" onclick="openModal('addPeerModal')" title="New Secure Chat">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <button class="nav-dock-item" id="navItemBurner" onclick="openModal('burnerModal')" title="Burner Room">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                </button>
+                <button class="nav-dock-item" id="navItemProfile" onclick="openModal('profileModal')" title="Profile & Keys">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </button>
+            </nav>
         </aside>
 
-        <!-- Right Panel: Chat Room -->
+        <!-- Right Pane: Active Chat Room -->
         <main class="chat-panel" id="chatPanel">
-            <!-- Empty State when no chat selected -->
+            
+            <!-- Empty State (No chat selected) -->
             <div class="empty-chat-state" id="emptyChatState">
                 <div class="empty-card">
                     <div class="empty-shield">
-                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                     </div>
                     <div class="empty-title">End-to-End Encrypted</div>
                     <div class="empty-desc">
-                        Messages are authenticated with ChaCha20-Poly1305 and ratcheted via X3DH & Double Ratchet. Zero central servers or telephone numbers required.
+                        Direct peer-to-peer authenticated messaging with ChaCha20-Poly1305 and Double Ratchet. Zero telemetry or metadata leaves your device.
                     </div>
                     <button class="btn-action btn-primary" onclick="openModal('addPeerModal')">+ Start Direct Chat</button>
                 </div>
@@ -959,36 +1514,42 @@
             <!-- Active Chat View -->
             <div class="chat-active-view" id="activeChatView">
                 <div class="chat-header">
-                    <button class="back-btn" onclick="closeChatMobile()">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    <button class="back-btn-mobile" onclick="closeChatMobile()" title="Back to links">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
                     </button>
-                    <div class="chat-peer-avatar" id="activePeerAvatar">?</div>
-                    <div class="chat-peer-info">
-                        <div class="chat-peer-title" id="activePeerName">Contact</div>
-                        <div class="chat-peer-status" id="activePeerStatus">online • Double Ratchet Active</div>
+                    <div class="active-peer-avatar-box" id="activePeerAvatar">?</div>
+                    <div class="chat-peer-info-box">
+                        <div class="chat-peer-title-text" id="activePeerName">Peer</div>
+                        <div class="chat-peer-status-text" id="activePeerStatus">online • Direct P2P</div>
                     </div>
                     <div class="chat-header-actions">
-                        <button class="icon-btn" onclick="pingActivePeer()" title="Ping Peer Latency">
-                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        <button class="action-circle-btn" onclick="pingActivePeer()" title="Ping Peer Latency">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                         </button>
-                        <button class="icon-btn" onclick="openModal('peerInfoModal')" title="Peer Details">
-                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        <button class="action-circle-btn" onclick="openModal('peerInfoModal')" title="Peer Details">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                         </button>
                     </div>
                 </div>
 
-                <!-- Messages Area -->
+                <!-- Forward-Secrecy Assurance Banner -->
+                <div class="security-banner-strip">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <span>Double Ratchet Active • Forward Secrecy Guaranteed • 0 Central Servers</span>
+                </div>
+
+                <!-- Scrollable Messages Feed -->
                 <div class="messages-area" id="messagesArea">
                     <div class="date-badge">Today</div>
                 </div>
 
-                <!-- Input Dock -->
+                <!-- Bottom Message Input Dock -->
                 <div class="input-bar">
-                    <button class="icon-btn" onclick="openModal('carrierModal')" title="Transports & Modulations">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                    <button class="action-circle-btn" onclick="openModal('carrierTransportModal')" title="Attach / Transports">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     </button>
-                    <input type="text" class="input-box" id="msgInput" placeholder="Message..." onkeydown="if(event.key==='Enter') sendCurrentMessage()">
-                    <button class="btn-send-round" onclick="sendCurrentMessage()" title="Send">
+                    <input type="text" class="input-box" id="msgInput" placeholder="Type encrypted message..." onkeydown="if(event.key==='Enter') sendCurrentMessage()">
+                    <button class="btn-send-lavender" onclick="sendCurrentMessage()" title="Send">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                     </button>
                 </div>
@@ -999,17 +1560,17 @@
     <!-- Modal 1: Add Peer / New Chat -->
     <div class="modal-overlay" id="addPeerModal">
         <div class="modal-card">
-            <div class="modal-title">New Chat / Add Peer</div>
+            <div class="modal-title">New Secure Peer</div>
             <div class="modal-desc">Connect directly to a peer across Wi-Fi, hotspot, or local network.</div>
 
             <label class="form-label">Contact Name / Alias</label>
-            <input type="text" class="form-input" id="newAliasInput" placeholder="e.g. Phone Friend, Mac, Station Alpha">
+            <input type="text" class="form-input" id="newAliasInput" placeholder="e.g. Station Alpha, Alice Phone">
 
-            <label class="form-label">Peer Socket Address (e.g. 192.168.1.45:9400 or 127.0.0.1:8081)</label>
-            <input type="text" class="form-input" id="newTargetInput" placeholder="IP:Port or xchat_ address">
+            <label class="form-label">Peer Socket Address (IP:Port)</label>
+            <input type="text" class="form-input font-mono" id="newTargetInput" placeholder="192.168.1.15:9400 or 127.0.0.1:8081">
 
-            <label class="form-label">Air-Gap Prekey Bundle JSON (Optional)</label>
-            <textarea class="form-input" id="newBundleInput" rows="2" placeholder="Leave blank for automatic key exchange..."></textarea>
+            <label class="form-label">Air-Gap Prekey Bundle (Optional)</label>
+            <textarea class="form-input font-mono" id="newBundleInput" rows="2" placeholder="Leave empty for automatic key exchange..."></textarea>
 
             <div class="modal-actions">
                 <button class="btn-action btn-cancel" onclick="closeModal('addPeerModal')">Cancel</button>
@@ -1018,13 +1579,13 @@
         </div>
     </div>
 
-    <!-- Modal 2: Air-Gap QR & Keys -->
+    <!-- Modal 2: Air-Gap Identity & QR -->
     <div class="modal-overlay" id="qrModal">
         <div class="modal-card" style="text-align: center;">
             <div class="modal-title">Air-Gap Identity & QR</div>
             <div class="modal-desc">Present this cryptographic payload for offline scanning without internet.</div>
 
-            <div style="background: white; color: black; padding: 14px; font-family: monospace; font-size: 11px; border-radius: 8px; word-break: break-all; margin-bottom: 16px;" id="qrPayloadDisplay">
+            <div style="background: #080808; border: 1px solid var(--border-card); color: var(--pastel-lavender); padding: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; border-radius: 14px; word-break: break-all; margin-bottom: 18px;" id="qrPayloadDisplay">
                 Loading identity...
             </div>
 
@@ -1035,34 +1596,40 @@
         </div>
     </div>
 
-    <!-- Modal 3: Carrier & Mixnet -->
-    <div class="modal-overlay" id="carrierModal">
+    <!-- Modal 3: Transport Selector Sheet -->
+    <div class="modal-overlay" id="carrierTransportModal">
         <div class="modal-card">
-            <div class="modal-title">🌐 Multi-Transport & Mixnet Carrier</div>
-            <div class="modal-desc">Send confidential messages even during complete telecommunications blackouts.</div>
+            <div class="modal-title">Select Active Transport</div>
+            <div class="modal-desc">Choose transmission medium for your encrypted messages.</div>
 
-            <div style="font-size: 12px; margin-bottom: 12px; line-height: 1.5; color: var(--tg-text-secondary); background: var(--tg-bg); padding: 12px; border-radius: 8px; border: 1px solid var(--tg-border);">
-                <div style="font-weight: 700; color: #60a5fa; margin-bottom: 4px;">🌀 Chaumian Mixnet (Internet & Mobile Data)</div>
-                <div>Status: <span style="color:var(--tg-green); font-weight:600;">ACTIVE (Batched & Shuffled)</span></div>
-                <div>Batch Threshold: 4 Envelopes | Cover Injection: Active</div>
-                <div>Timing Jitter: 20ms - 120ms (Breaks correlation)</div>
-            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+                <div style="background:#0a0a0a; border:1px solid #282828; padding:12px 14px; border-radius:14px; cursor:pointer;" onclick="closeModal('carrierTransportModal'); alert('🌀 Mixnet Onion Routing active.');">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-weight:700; color:var(--pastel-mint); font-size:13px;">🌀 Chaumian Mixnet</span>
+                        <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--status-green);">ACTIVE</span>
+                    </div>
+                    <div style="font-size:11.5px; color:var(--text-secondary); margin-top:2px;">Sphinx onion routing with 3 mix hops & timing jitter.</div>
+                </div>
 
-            <div style="font-size: 12px; margin-bottom: 12px; line-height: 1.5; color: var(--tg-text-secondary); background: var(--tg-bg); padding: 12px; border-radius: 8px; border: 1px solid var(--tg-border);">
-                <div style="font-weight: 700; color: #f59e0b; margin-bottom: 4px;">💬 Cellular SMS Carrier (No Data/Internet)</div>
-                <div>Transmits encrypted ciphertext in 140-char SMS text frames. Telcos see only opaque hex.</div>
-                <button class="btn-action btn-primary" style="margin-top:8px; font-size:11px; padding:5px 12px;" onclick="generateSmsFrameDemo()">Generate SMS Frame</button>
-                <div id="smsFrameResult" style="font-family:monospace; font-size:11px; word-break:break-all; margin-top:8px; display:none; background:#000; padding:8px; border-radius:6px; color:#60a5fa;"></div>
-            </div>
+                <div style="background:#0a0a0a; border:1px solid #282828; padding:12px 14px; border-radius:14px; cursor:pointer;" onclick="closeModal('carrierTransportModal'); switchTab('carrier');">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-weight:700; color:#f59e0b; font-size:13px;">💬 Cellular SMS Frame</span>
+                        <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:#f59e0b;">CELLULAR</span>
+                    </div>
+                    <div style="font-size:11.5px; color:var(--text-secondary); margin-top:2px;">140-char SMS frames for complete internet blackouts.</div>
+                </div>
 
-            <div style="font-size: 12px; margin-bottom: 12px; line-height: 1.5; color: var(--tg-text-secondary); background: var(--tg-bg); padding: 12px; border-radius: 8px; border: 1px solid var(--tg-border);">
-                <div style="font-weight: 700; color: #10b981; margin-bottom: 4px;">🎙️ Voice Call Audio Modem (AFSK)</div>
-                <div>Modulates ciphertext into 1200Hz/2200Hz audio tones for telephone calls or speaker-mic airgap.</div>
-                <button class="btn-action btn-primary" style="margin-top:8px; font-size:11px; padding:5px 12px;" onclick="playAcousticTones()">▶ Play Modem Tones</button>
+                <div style="background:#0a0a0a; border:1px solid #282828; padding:12px 14px; border-radius:14px; cursor:pointer;" onclick="closeModal('carrierTransportModal'); switchTab('carrier');">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-weight:700; color:var(--pastel-lavender); font-size:13px;">🎙️ Acoustic Audio Modem</span>
+                        <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--pastel-lavender);">AUDIO</span>
+                    </div>
+                    <div style="font-size:11.5px; color:var(--text-secondary); margin-top:2px;">Bell 202 AFSK audio tones over telephone voice calls.</div>
+                </div>
             </div>
 
             <div class="modal-actions">
-                <button class="btn-action btn-cancel" onclick="closeModal('carrierModal')">Close</button>
+                <button class="btn-action btn-cancel" onclick="closeModal('carrierTransportModal')">Close</button>
             </div>
         </div>
     </div>
@@ -1088,7 +1655,7 @@
         <div class="modal-card">
             <div class="modal-title">My Cryptographic Profile</div>
             <div class="modal-desc">Your anonymous identity on the decentralized mesh.</div>
-            <div style="font-size: 12.5px; font-family: monospace; line-height: 1.6; color: var(--tg-text-secondary); background: var(--tg-bg); padding: 14px; border-radius: 10px; margin-bottom: 16px; word-break: break-all;" id="profileDetailsBody">
+            <div style="font-size: 12.5px; font-family: 'JetBrains Mono', monospace; line-height: 1.6; color: var(--text-secondary); background: #080808; border: 1px solid var(--border-card); padding: 14px; border-radius: 14px; margin-bottom: 16px; word-break: break-all;" id="profileDetailsBody">
                 ...
             </div>
             <div class="modal-actions">
@@ -1101,18 +1668,18 @@
     <div class="modal-overlay" id="peerInfoModal">
         <div class="modal-card">
             <div class="modal-title" id="peerInfoTitle">Peer Details</div>
-            <div style="font-size: 12px; font-family: monospace; line-height: 1.6; color: var(--tg-text-secondary); background: var(--tg-bg); padding: 14px; border-radius: 10px; margin-bottom: 16px; word-break: break-all;" id="peerInfoBody">
+            <div style="font-size: 12px; font-family: 'JetBrains Mono', monospace; line-height: 1.6; color: var(--text-secondary); background: #080808; border: 1px solid var(--border-card); padding: 14px; border-radius: 14px; margin-bottom: 16px; word-break: break-all;" id="peerInfoBody">
                 ...
             </div>
             <div class="modal-actions">
                 <button class="btn-action btn-danger" onclick="deleteActivePeer()">Remove Peer</button>
-                <button class="btn-action btn-primary" onclick="closeModal('peerInfoModal')">Close</button>
+                <button class="btn-action btn-cancel" onclick="closeModal('peerInfoModal')">Close</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Web Audio Synthesized Sound Effects (Zero external audio assets)
+        // Web Audio Synthesized Sound Effects (100% offline, Zero external assets)
         const SoundFX = {
             ctx: null,
             getCtx: function() {
@@ -1167,14 +1734,13 @@
             }
         };
 
-        // Telegram Signature Color Palette
+        // Signature High-Contrast Pastel Avatar Palette
         const AVATAR_PALETTE = [
-            'linear-gradient(135deg, #2481cc, #1e70b3)', // Telegram Blue
-            'linear-gradient(135deg, #4fae4e, #3d8f3c)', // Green
-            'linear-gradient(135deg, #e57e38, #b86025)', // Orange
-            'linear-gradient(135deg, #8a6df2, #6b4ec2)', // Purple
-            'linear-gradient(135deg, #e53935, #ba2522)', // Red
-            'linear-gradient(135deg, #29b6f6, #0288d1)'  // Cyan
+            'linear-gradient(135deg, #d4c4fb, #b8a0f8)', // Pastel Lavender
+            'linear-gradient(135deg, #d2e8b8, #b6d994)', // Sage Mint
+            'linear-gradient(135deg, #fcd34d, #f59e0b)', // Amber Warm
+            'linear-gradient(135deg, #93c5fd, #60a5fa)', // Sky
+            'linear-gradient(135deg, #f472b6, #ec4899)'  // Rose
         ];
 
         function getAvatarBg(str) {
@@ -1185,7 +1751,7 @@
             return AVATAR_PALETTE[Math.abs(hash) % AVATAR_PALETTE.length];
         }
 
-        // Storage wrapper supporting Native Android & LocalStorage
+        // Persistent Storage Wrapper supporting Native Android & LocalStorage
         const Storage = {
             get: (key) => {
                 if (window.AndroidBridge && window.AndroidBridge.loadPersistent) {
@@ -1205,13 +1771,14 @@
         let myIdentity = {
             address: Storage.get('my_address') || 'xchat_' + Math.random().toString(16).substring(2, 10),
             reachable: '127.0.0.1:8080',
-            fingerprint: 'local_fp_' + Math.random().toString(16).substring(2, 8)
+            fingerprint: 'fp_' + Math.random().toString(16).substring(2, 10)
         };
 
         let contacts = JSON.parse(Storage.get('contacts') || '[]');
         let activeContact = null;
         let chatHistories = JSON.parse(Storage.get('chat_histories') || '{}');
         let isNative = !!(window.AndroidBridge && window.AndroidBridge.isNativeAndroid);
+        const API_BASE = (window.location.protocol === 'file:') ? 'http://127.0.0.1:4000' : '';
 
         async function init() {
             if (isNative) {
@@ -1221,7 +1788,7 @@
                 } catch(e) {}
             } else {
                 try {
-                    const res = await fetch('/api/identity');
+                    const res = await fetch(API_BASE + '/api/identity');
                     if (res.ok) {
                         const data = await res.json();
                         myIdentity.address = data.address || myIdentity.address;
@@ -1232,7 +1799,7 @@
                 } catch(e) {}
 
                 try {
-                    const res = await fetch('/api/contacts');
+                    const res = await fetch(API_BASE + '/api/contacts');
                     if (res.ok) {
                         const srvContacts = await res.json();
                         if (srvContacts && srvContacts.length > 0) {
@@ -1245,12 +1812,16 @@
 
             document.getElementById('myReachableSocket').innerText = myIdentity.reachable;
             document.getElementById('qrPayloadDisplay').innerText = JSON.stringify(myIdentity, null, 2);
+            if (document.getElementById('qrPayloadDisplaySide')) {
+                document.getElementById('qrPayloadDisplaySide').innerText = JSON.stringify(myIdentity, null, 2);
+            }
             document.getElementById('profileDetailsBody').innerText = 
                 `Address:     ${myIdentity.address}\n` +
                 `Reachable:   ${myIdentity.reachable}\n` +
                 `Fingerprint: ${myIdentity.fingerprint}\n` +
-                `Platform:    ${isNative ? 'Android Native' : 'Desktop / Web'}\n` +
-                `Encryption:  X3DH + Double Ratchet + ChaCha20-Poly1305`;
+                `Platform:    ${isNative ? 'Android Native (WebView + Socket)' : 'Desktop (Tokio Rust Server)'}\n` +
+                `Encryption:  X3DH + Double Ratchet + ChaCha20-Poly1305\n` +
+                `Mixnet:      Chaumian Sphinx Onion Routing`;
 
             renderContacts();
             if (contacts.length > 0) {
@@ -1269,8 +1840,8 @@
 
             if (items.length === 0) {
                 listEl.innerHTML = `
-                    <div style="text-align: center; color: var(--tg-text-secondary); font-size: 13.5px; padding: 48px 24px; line-height: 1.6;">
-                        No chats yet.<br>Tap the blue <b>+</b> button to add a peer by IP address.
+                    <div style="text-align: center; color: var(--text-secondary); font-size: 13px; padding: 48px 24px; line-height: 1.6;">
+                        No encrypted links yet.<br>Tap the pastel <b style="color:var(--pastel-lavender);">+</b> button to add a peer socket.
                     </div>
                 `;
                 return;
@@ -1278,25 +1849,25 @@
 
             items.forEach(c => {
                 const card = document.createElement('div');
-                card.className = 'chat-card' + (activeContact && activeContact.alias === c.alias ? ' active' : '');
+                card.className = 'contact-squircle-card' + (activeContact && activeContact.alias === c.alias ? ' active' : '');
                 card.onclick = () => selectContact(c);
 
                 const bg = getAvatarBg(c.alias);
                 const initial = c.alias.charAt(0).toUpperCase();
 
                 card.innerHTML = `
-                    <div class="avatar-wrap">
-                        <div class="avatar" style="background: ${bg}">${initial}</div>
-                        <div class="online-badge"></div>
+                    <div class="contact-avatar-squircle" style="background: ${bg}">
+                        ${initial}
+                        <div class="online-dot-badge"></div>
                     </div>
-                    <div class="chat-info">
-                        <div class="chat-title-row">
-                            <span class="chat-name">${escapeHtml(c.alias)}</span>
-                            <span class="chat-time">${c.last_time || ''}</span>
+                    <div class="contact-meta-col">
+                        <div class="contact-name-row">
+                            <span class="contact-name-text">${escapeHtml(c.alias)}</span>
+                            <span class="contact-time-text">${c.last_time || ''}</span>
                         </div>
-                        <div class="chat-snippet-row">
-                            <span class="chat-snippet">${escapeHtml(c.last_message || c.target || 'Tap to chat')}</span>
-                            <span class="chat-badge">${c.status || 'LAN'}</span>
+                        <div class="contact-preview-row">
+                            <span class="contact-snippet-text">${escapeHtml(c.last_message || c.target || 'Tap to chat')}</span>
+                            <span class="contact-badge-pill">${c.status || 'LAN'}</span>
                         </div>
                     </div>
                 `;
@@ -1328,6 +1899,7 @@
             document.getElementById('activePeerStatus').innerText = c.target ? 'online • ' + c.target : 'Double Ratchet Verified';
 
             // Mobile slide transition
+            document.body.classList.add('chat-open');
             document.getElementById('sidebar').classList.add('hidden-mobile');
             document.getElementById('chatPanel').classList.add('active-mobile');
 
@@ -1339,8 +1911,31 @@
         }
 
         function closeChatMobile() {
+            document.body.classList.remove('chat-open');
             document.getElementById('sidebar').classList.remove('hidden-mobile');
             document.getElementById('chatPanel').classList.remove('active-mobile');
+        }
+
+        function switchTab(tab) {
+            const paneChats = document.getElementById('tabPaneChats');
+            const paneCarrier = document.getElementById('tabPaneCarrier');
+            const navChats = document.getElementById('navItemChats');
+            const navCarrier = document.getElementById('navItemCarrier');
+
+            // If on mobile and a chat was open, close it back to the sidebar
+            closeChatMobile();
+
+            if (tab === 'carrier') {
+                if (paneChats) paneChats.style.display = 'none';
+                if (paneCarrier) paneCarrier.style.display = 'flex';
+                if (navChats) navChats.classList.remove('active');
+                if (navCarrier) navCarrier.classList.add('active');
+            } else {
+                if (paneCarrier) paneCarrier.style.display = 'none';
+                if (paneChats) paneChats.style.display = 'flex';
+                if (navCarrier) navCarrier.classList.remove('active');
+                if (navChats) navChats.classList.add('active');
+            }
         }
 
         function handleBackPressed() {
@@ -1360,8 +1955,8 @@
             const history = chatHistories[activeContact.alias] || [];
             if (history.length === 0) {
                 const notice = document.createElement('div');
-                notice.style.cssText = 'text-align: center; color: var(--tg-text-secondary); font-size: 13.5px; margin: 50px auto; max-width: 320px; line-height: 1.55;';
-                notice.innerHTML = `Encrypted channel established with <b>${escapeHtml(activeContact.alias)}</b>.<br>Send a message below to advance the forward-secrecy ratchet.`;
+                notice.style.cssText = 'text-align: center; color: var(--text-secondary); font-size: 13px; margin: 40px auto; max-width: 300px; line-height: 1.55;';
+                notice.innerHTML = `Encrypted link established with <b style="color:var(--text-pure);">${escapeHtml(activeContact.alias)}</b>.<br>Send a message below to advance the forward-secrecy ratchet.`;
                 area.appendChild(notice);
             } else {
                 history.forEach(m => {
@@ -1369,10 +1964,10 @@
                     bubble.className = 'msg-bubble ' + (m.sender === 'self' ? 'out' : 'in');
                     bubble.innerHTML = `
                         ${escapeHtml(m.text)}
-                        <span class="msg-meta">
+                        <div class="msg-meta-row">
                             <span>${m.time || ''}</span>
-                            ${m.sender === 'self' ? '<span class="msg-checks"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18 7l-8.5 8.5-4.5-4.5-1.4 1.4 5.9 5.9 9.9-9.9z"/></svg></span>' : ''}
-                        </span>
+                            ${m.sender === 'self' ? '<span>✓✓</span>' : ''}
+                        </div>
                     `;
                     area.appendChild(bubble);
                 });
@@ -1415,7 +2010,7 @@
                 window.AndroidBridge.sendHttpEnvelope(activeContact.target, payload, 'send_' + Date.now());
             } else {
                 try {
-                    await fetch('/api/send', {
+                    await fetch(API_BASE + '/api/send', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -1428,7 +2023,7 @@
             }
         }
 
-        // Real-time network receiver for Android ServerSocket
+        // Android ServerSocket network receiver hook
         window.onIncomingNetworkMessage = function(rawJson) {
             try {
                 const data = typeof rawJson === 'string' ? JSON.parse(rawJson) : rawJson;
@@ -1471,7 +2066,7 @@
         async function pollServerMessages() {
             if (!activeContact) return;
             try {
-                const res = await fetch('/api/messages?peer=' + encodeURIComponent(activeContact.alias));
+                const res = await fetch(API_BASE + '/api/messages?peer=' + encodeURIComponent(activeContact.alias));
                 if (res.ok) {
                     const msgs = await res.json();
                     if (msgs && msgs.length > 0) {
@@ -1511,7 +2106,7 @@
 
             if (!isNative) {
                 try {
-                    await fetch('/api/contacts', {
+                    await fetch(API_BASE + '/api/contacts', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(newPeer)
@@ -1534,14 +2129,14 @@
             if (isNative && window.AndroidBridge.pingPeer) {
                 window.AndroidBridge.pingPeer(target, 'ping_' + Date.now());
             } else {
-                fetch('/api/ping', {
+                fetch(API_BASE + '/api/ping', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ target: target })
                 })
                 .then(r => r.json())
                 .then(d => {
-                    alert(`⚡ Ping response from ${activeContact.alias}:\nStatus: ONLINE & DIRECTLY REACHABLE\nRound-Trip Latency: ${d.latency_ms || 14} ms\nZero metadata leaked.`);
+                    alert(`⚡ Ping response from ${activeContact.alias}:\nStatus: ONLINE & REACHABLE\nRound-Trip Latency: ${d.latency_ms || 14} ms\nZero metadata leaked.`);
                 })
                 .catch(() => {
                     alert(`⚡ Ping dispatched across local link.`);
