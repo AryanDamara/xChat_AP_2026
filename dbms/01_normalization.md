@@ -306,3 +306,86 @@ No transitive dependencies remain. The schema is strictly in **3NF**.
 
 ---
 
+## 7. Transformation to Boyce-Codd Normal Form (BCNF)
+
+### 7.1 The BCNF Strict Determinant Requirement
+A relation schema $R$ is in **Boyce-Codd Normal Form (BCNF)** if and only if:
+$$\forall (X \to Y) \in F^+ \text{ (where } Y \not\subseteq X \text{)}, \quad X \text{ is strictly a \textbf{Superkey} of } R.$$
+
+**Why 3NF is not always enough:**  
+3NF permits a dependency $X \to Y$ where $X$ is *not* a superkey, provided that $Y$ is a prime attribute (Condition B). This loophole permits anomalies when multiple overlapping candidate keys exist. BCNF closes this loophole by discarding Condition B completely.
+
+---
+
+### 7.2 Overlapping Candidate Key Analysis
+
+We examine the three entities in xChat where multiple candidate keys exist:
+
+#### 1. Entity: `PREKEY_BUNDLES`
+$$\text{PREKEY\_BUNDLES}(\text{prekey\_id}, \text{user\_id}, \text{key\_id\_num}, \text{key\_type}, \text{public\_key}, \text{signature}, \text{is\_consumed})$$
+- Candidate Key 1: $CK_1 = \{\text{prekey\_id}\}$
+- Candidate Key 2: $CK_2 = \{\text{public\_key}\}$ (Every cryptographic curve point is globally unique)
+- Candidate Key 3: $CK_3 = \{\text{user\_id}, \text{key\_id\_num}, \text{key\_type}\}$ (A user cannot issue the same prekey sequence number twice)
+
+*Functional Dependencies:*
+- $FD_1: \text{prekey\_id} \to \{\text{user\_id}, \text{key\_id\_num}, \text{key\_type}, \text{public\_key}, \text{signature}, \text{is\_consumed}\}$
+- $FD_2: \text{public\_key} \to \{\text{prekey\_id}, \text{user\_id}, \text{key\_id\_num}, \text{key\_type}, \text{signature}, \text{is\_consumed}\}$
+- $FD_3: \{\text{user\_id}, \text{key\_id\_num}, \text{key\_type}\} \to \{\text{prekey\_id}, \text{public\_key}, \text{signature}, \text{is\_consumed}\}$
+
+*Evaluation:*
+- Determinant of $FD_1$: $\{\text{prekey\_id}\}^+ = U \implies$ Superkey.
+- Determinant of $FD_2$: $\{\text{public\_key}\}^+ = U \implies$ Superkey.
+- Determinant of $FD_3$: $\{\text{user\_id}, \text{key\_id\_num}, \text{key\_type}\}^+ = U \implies$ Superkey.
+
+All determinants are superkeys. `PREKEY_BUNDLES` satisfies BCNF without further decomposition.
+
+#### 2. Entity: `CONTACTS`
+$$\text{CONTACTS}(\text{contact\_id}, \text{user\_id}, \text{peer_address}, \text{peer_name}, \text{reachable_socket}, \text{fingerprint}, \text{trust_status})$$
+- Candidate Key 1: $CK_1 = \{\text{contact\_id}\}$
+- Candidate Key 2: $CK_2 = \{\text{user\_id}, \text{peer\_address}\}$ (A user cannot add duplicate contact records for the same peer address)
+
+*Functional Dependencies:*
+- $FD_1: \text{contact\_id} \to \{\text{user\_id}, \text{peer\_address}, \text{peer\_name}, \text{reachable\_socket}, \text{fingerprint}, \text{trust\_status}\}$
+- $FD_2: \{\text{user\_id}, \text{peer\_address}\} \to \{\text{contact\_id}, \text{peer\_name}, \text{reachable\_socket}, \text{fingerprint}, \text{trust\_status}\}$
+
+*Evaluation:*
+- Determinant of $FD_1$: $\{\text{contact\_id}\}^+ = U \implies$ Superkey.
+- Determinant of $FD_2$: $\{\text{user\_id}, \text{peer\_address}\}^+ = U \implies$ Superkey.
+
+All determinants are superkeys. `CONTACTS` satisfies BCNF.
+
+#### 3. Entity: `RATCHET_SESSIONS`
+$$\text{RATCHET\_SESSIONS}(\text{session\_id}, \text{conversation\_id}, \text{peer\_dh\_pub}, \text{local\_dh\_pub}, \text{root\_key\_hash}, \text{send\_chain\_hash}, \text{recv\_chain\_hash}, \text{send\_ctr}, \text{recv\_ctr})$$
+- Candidate Key 1: $CK_1 = \{\text{session\_id}\}$
+- Candidate Key 2: $CK_2 = \{\text{conversation\_id}\}$ (In 1:1 Double Ratchet, a conversation has exactly one active cryptographic session state)
+
+*Functional Dependencies:*
+- $FD_1: \text{session\_id} \to \{\text{conversation\_id}, \dots\}$
+- $FD_2: \text{conversation\_id} \to \{\text{session\_id}, \dots\}$
+
+*Evaluation:*
+- Both determinants are superkeys. `RATCHET_SESSIONS` satisfies BCNF.
+
+---
+
+### 7.3 Proving BCNF Compliance Across All Decomposed Relations
+Every relation in the decomposed schema has been evaluated against the strict BCNF condition:
+$$\forall (X \to Y) \in F^+, \quad X \text{ is a Superkey.}$$
+
+| Relation Name | Functional Dependencies Tested | Determinants ($X$) | Is $X$ a Superkey? | BCNF Status |
+| :--- | :--- | :--- | :---: | :---: |
+| `users` | $\text{user\_id} \to \{\dots\}$, $\text{master\_fp} \to \{\dots\}$ | `user_id`, `master_fp` | **YES** | **PASS** |
+| `identity_keys` | $\text{key\_id} \to \{\dots\}$, $\text{public\_key} \to \{\dots\}$ | `key_id`, `public_key` | **YES** | **PASS** |
+| `prekey_bundles` | $\text{prekey\_id} \to \{\dots\}$, $\text{prekey\_pub} \to \{\dots\}$ | `prekey_id`, `public_key` | **YES** | **PASS** |
+| `contacts` | $\text{contact\_id} \to \{\dots\}$, $\{\text{uid}, \text{peer}\} \to \{\dots\}$ | `contact_id`, `(user_id, peer)` | **YES** | **PASS** |
+| `conversations` | $\text{conversation\_id} \to \{\dots\}$ | `conversation_id` | **YES** | **PASS** |
+| `messages` | $\text{message\_id} \to \{\dots\}$ | `message_id` | **YES** | **PASS** |
+| `ratchet_sessions` | $\text{session\_id} \to \{\dots\}$, $\text{conv\_id} \to \{\dots\}$ | `session_id`, `conversation_id`| **YES** | **PASS** |
+| `skipped_keys` | $\{\text{ses\_id}, \text{dh\_pub}, \text{ctr}\} \to \{\dots\}$ | Composite key | **YES** | **PASS** |
+| `outbox_queue` | $\text{envelope\_id} \to \{\dots\}$ | `envelope_id` | **YES** | **PASS** |
+| `relay_cache` | $\text{route\_token} \to \{\dots\}$ | `route_token` | **YES** | **PASS** |
+
+**Conclusion:** The entire relational schema is in **Boyce-Codd Normal Form (BCNF)**.
+
+---
+
