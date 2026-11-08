@@ -141,3 +141,168 @@ Below is a representative sample of tuples in $\text{UNF\_XCHAT}$, highlighting 
 
 ---
 
+## 4. Transformation to First Normal Form (1NF)
+
+### 4.1 Domain Atomicity Enforcement
+A relation is in **First Normal Form (1NF)** if and only if:
+1. Every attribute domain contains only atomic (indivisible) values.
+2. There are no repeating groups, nested structures, or array columns.
+3. Every tuple can be uniquely identified by a defined Primary Key.
+
+To achieve 1NF, we flatten the repeating groups. Each element of a repeating group produces a distinct row combined with the primary key attributes of the parent entity.
+
+### 4.2 Flattened 1NF Schema
+$$\text{XCHAT\_1NF}($$
+$$\quad \underline{\text{user\_id}, \text{key\_id}, \text{prekey\_id}, \text{contact\_id}, \text{conversation\_id}, \text{msg\_id}, \text{envelope\_id}, \text{route\_token}},$$
+$$\quad \text{username}, \text{master\_fingerprint}, \text{user\_created\_at},$$
+$$\quad \text{key\_type}, \text{public\_key}, \text{enc\_privkey},$$
+$$\quad \text{key\_id\_num}, \text{prekey\_type}, \text{prekey\_pub}, \text{signature}, \text{is\_consumed},$$
+$$\quad \text{peer\_address}, \text{peer\_name}, \text{reachable\_socket}, \text{fingerprint}, \text{trust\_status},$$
+$$\quad \text{conv\_type}, \text{conv\_title}, \text{conv\_last\_active},$$
+$$\quad \text{sender\_address}, \text{recipient\_address}, \text{ciphertext}, \text{nonce}, \text{ratchet\_ctr}, \text{delivery\_status}, \text{sent\_at},$$
+$$\quad \text{session\_id}, \text{peer\_dh\_pub}, \text{local\_dh\_pub}, \text{root\_key\_hash}, \text{send\_chain\_hash}, \text{recv\_chain\_hash}, \text{send\_ctr}, \text{recv\_ctr},$$
+$$\quad \text{skipped\_dh\_pub}, \text{skipped\_msg\_ctr}, \text{skipped\_msg\_key}, \text{skipped\_expires\_at},$$
+$$\quad \text{dest\_addr}, \text{transport\_type}, \text{raw\_payload}, \text{retry\_count}, \text{next\_retry\_at}, \text{outbox\_status},$$
+$$\quad \text{opaque\_payload}, \text{hop\_count}, \text{ttl\_seconds}, \text{relay\_expires\_at}$$
+$$)$$
+
+### 4.3 Candidate Key Formulation & Remaining Anomaly Analysis
+The Composite Primary Key in 1NF requires the conjunction of all entity discriminators:
+$$\text{PK}_{\text{1NF}} = \{\text{user\_id}, \text{key\_id}, \text{prekey\_id}, \text{contact\_id}, \text{conversation\_id}, \text{msg\_id}, \text{envelope\_id}, \text{route\_token}\}$$
+
+**Why 1NF is Deficient:**  
+Although 1NF achieves atomic cell values, it creates extreme redundancy. If a user has $2$ identity keys, $50$ prekeys, $20$ contacts, and $1,000$ messages, the Cartesian expansion creates $2 \times 50 \times 20 \times 1,000 = 2,000,000$ tuples. Almost every attribute depends on only a *subset* of the primary key, violating Second Normal Form.
+
+---
+
+## 5. Transformation to Second Normal Form (2NF)
+
+### 5.1 Identification of Partial Functional Dependencies
+A relation is in **Second Normal Form (2NF)** if and only if:
+1. It is in **1NF**.
+2. No non-prime attribute is **partially functionally dependent** on any candidate key. That is, every non-prime attribute must depend on the *entire* candidate key, not a proper subset.
+
+Formally, a dependency $X \to Y$ is a **Partial Dependency** if:
+$$X \subset CK \quad \text{and} \quad Y \text{ is a non-prime attribute.}$$
+
+Evaluating the functional dependencies against $\text{PK}_{\text{1NF}}$:
+1. $\text{user\_id} \subset \text{PK}_{\text{1NF}}$, yet:
+   $$\text{user\_id} \to \{\text{username}, \text{master\_fingerprint}, \text{user\_created\_at}\} \quad \text{\textbf{(Partial Dependency)}}$$
+2. $\{\text{user\_id}, \text{key\_id}\} \subset \text{PK}_{\text{1NF}}$, yet:
+   $$\{\text{user\_id}, \text{key\_id}\} \to \{\text{key\_type}, \text{public\_key}, \text{enc\_privkey}\} \quad \text{\textbf{(Partial Dependency)}}$$
+3. $\{\text{user\_id}, \text{prekey\_id}\} \subset \text{PK}_{\text{1NF}}$, yet:
+   $$\{\text{user\_id}, \text{prekey\_id}\} \to \{\text{key\_id\_num}, \text{prekey\_type}, \text{prekey\_pub}, \text{signature}, \text{is\_consumed}\} \quad \text{\textbf{(Partial Dependency)}}$$
+4. $\{\text{user\_id}, \text{contact\_id}\} \subset \text{PK}_{\text{1NF}}$, yet:
+   $$\{\text{user\_id}, \text{contact\_id}\} \to \{\text{peer\_address}, \text{peer\_name}, \text{reachable\_socket}, \text{fingerprint}, \text{trust\_status}\} \quad \text{\textbf{(Partial Dependency)}}$$
+5. $\text{conversation\_id} \subset \text{PK}_{\text{1NF}}$, yet:
+   $$\text{conversation\_id} \to \{\text{user\_id}, \text{contact\_id}, \text{conv\_type}, \text{conv\_title}, \text{conv\_last\_active}\} \quad \text{\textbf{(Partial Dependency)}}$$
+6. $\text{msg\_id} \subset \text{PK}_{\text{1NF}}$, yet:
+   $$\text{msg\_id} \to \{\text{conversation\_id}, \text{sender\_address}, \text{recipient\_address}, \text{ciphertext}, \text{nonce}, \text{ratchet\_ctr}, \text{delivery\_status}, \text{sent\_at}\} \quad \text{\textbf{(Partial Dependency)}}$$
+7. $\text{envelope\_id} \subset \text{PK}_{\text{1NF}}$, yet:
+   $$\text{envelope\_id} \to \{\text{conversation\_id}, \text{dest\_addr}, \text{transport\_type}, \text{raw\_payload}, \text{retry\_count}, \text{next\_retry\_at}, \text{outbox\_status}\} \quad \text{\textbf{(Partial Dependency)}}$$
+8. $\text{route\_token} \subset \text{PK}_{\text{1NF}}$, yet:
+   $$\text{route\_token} \to \{\text{opaque\_payload}, \text{hop\_count}, \text{ttl\_seconds}, \text{relay\_expires\_at}\} \quad \text{\textbf{(Partial Dependency)}}$$
+
+---
+
+### 5.2 2NF Decomposition Algorithm
+To eliminate partial dependencies, we project the relation into sub-relations where the determinant of each partial dependency becomes the full primary key of a dedicated relation.
+
+#### Relation 2NF.1: `R_USERS`
+$$\text{R\_USERS}(\underline{\text{user\_id}}, \text{username}, \text{master\_fingerprint}, \text{created\_at})$$
+- Determinant: $\{\text{user\_id}\}$ (Full primary key)
+
+#### Relation 2NF.2: `R_IDENTITY_KEYS`
+$$\text{R\_IDENTITY\_KEYS}(\underline{\text{key\_id}}, \text{user\_id}, \text{key\_type}, \text{public\_key}, \text{enc\_privkey})$$
+- Determinant: $\{\text{key\_id}\}$ (Full primary key)
+
+#### Relation 2NF.3: `R_PREKEYS`
+$$\text{R\_PREKEYS}(\underline{\text{prekey\_id}}, \text{user\_id}, \text{key\_id\_num}, \text{prekey\_type}, \text{prekey\_pub}, \text{signature}, \text{is\_consumed})$$
+- Determinant: $\{\text{prekey\_id}\}$ (Full primary key)
+
+#### Relation 2NF.4: `R_CONTACTS_CONVERSATIONS`
+$$\text{R\_CONTACTS\_CONVERSATIONS}(\underline{\text{conversation\_id}}, \text{user\_id}, \text{contact\_id}, \text{peer\_address}, \text{peer\_name}, \text{reachable\_socket}, \text{fingerprint}, \text{trust\_status}, \text{conv\_type}, \text{conv\_title}, \text{conv\_last\_active})$$
+- Determinant: $\{\text{conversation\_id}\}$ (Full primary key)
+
+#### Relation 2NF.5: `R_MESSAGES`
+$$\text{R\_MESSAGES}(\underline{\text{msg\_id}}, \text{conversation\_id}, \text{sender\_address}, \text{recipient\_address}, \text{ciphertext}, \text{nonce}, \text{ratchet\_ctr}, \text{delivery\_status}, \text{sent\_at})$$
+- Determinant: $\{\text{msg\_id}\}$ (Full primary key)
+
+#### Relation 2NF.6: `R_RATCHET_SESSIONS`
+$$\text{R\_RATCHET\_SESSIONS}(\underline{\text{session\_id}}, \text{conversation\_id}, \text{peer\_dh\_pub}, \text{local\_dh\_pub}, \text{root\_key\_hash}, \text{send\_chain\_hash}, \text{recv\_chain\_hash}, \text{send\_ctr}, \text{recv\_ctr})$$
+- Determinant: $\{\text{session\_id}\}$ (Full primary key)
+
+#### Relation 2NF.7: `R_SKIPPED_KEYS`
+$$\text{R\_SKIPPED\_KEYS}(\underline{\text{session\_id}, \text{skipped\_dh\_pub}, \text{skipped\_msg\_ctr}}, \text{skipped\_msg\_key}, \text{skipped\_expires\_at})$$
+- Determinant: $\{\text{session\_id}, \text{skipped\_dh\_pub}, \text{skipped\_msg\_ctr}\}$ (Full composite primary key)
+
+#### Relation 2NF.8: `R_OUTBOX`
+$$\text{R\_OUTBOX}(\underline{\text{envelope\_id}}, \text{conversation\_id}, \text{dest\_addr}, \text{transport\_type}, \text{raw\_payload}, \text{retry\_count}, \text{next\_retry\_at}, \text{outbox\_status})$$
+- Determinant: $\{\text{envelope\_id}\}$ (Full primary key)
+
+#### Relation 2NF.9: `R_RELAY`
+$$\text{R\_RELAY}(\underline{\text{route\_token}}, \text{opaque\_payload}, \text{hop\_count}, \text{ttl\_seconds}, \text{relay\_expires\_at})$$
+- Determinant: $\{\text{route\_token}\}$ (Full primary key)
+
+### 5.3 Proving 2NF Compliance
+In every sub-relation $R_i \in \{\text{2NF.1} \dots \text{2NF.9}\}$, every non-prime attribute depends on the full primary key of $R_i$. There are **zero partial dependencies**. Thus, the schema is strictly in **2NF**.
+
+---
+
+## 6. Transformation to Third Normal Form (3NF)
+
+### 6.1 Identification of Transitive Functional Dependencies
+A relation is in **Third Normal Form (3NF)** if and only if:
+1. It is in **2NF**.
+2. No non-prime attribute is **transitively dependent** on any candidate key.
+
+Formally, a transitive dependency exists if:
+$$X \to Y \quad \text{and} \quad Y \to Z$$
+where $X$ is a candidate key, $Y$ is a non-candidate key attribute set, and $Z$ is a non-prime attribute ($Y \not\to X$).
+
+#### Transitive Dependency in `R_CONTACTS_CONVERSATIONS`
+In relation 2NF.4:
+$$\text{PK} = \{\text{conversation\_id}\}$$
+We have:
+1. $\text{conversation\_id} \to \text{contact\_id}$
+2. $\text{contact\_id} \to \{\text{peer\_address}, \text{peer\_name}, \text{reachable\_socket}, \text{fingerprint}, \text{trust\_status}\}$
+3. However, $\text{contact\_id} \not\to \text{conversation\_id}$ (a contact can participate in multiple conversations, e.g., Direct and Ephemeral Burner).
+
+Thus, $\{\text{peer\_address}, \text{peer\_name}, \text{reachable\_socket}, \text{fingerprint}, \text{trust\_status}\}$ transitively depend on $\text{conversation\_id}$ through $\text{contact\_id}$. This causes update anomalies whenever a contact updates their IP socket.
+
+---
+
+### 6.2 3NF Decomposition & Entity Extraction
+We decompose `R_CONTACTS_CONVERSATIONS` into two distinct relations:
+
+1. **`CONTACTS`** (Transitive entity extracted)
+   $$\text{CONTACTS}(\underline{\text{contact\_id}}, \text{user\_id}, \text{peer\_address}, \text{peer\_name}, \text{reachable\_socket}, \text{fingerprint}, \text{trust\_status}, \text{updated\_at})$$
+   - Primary Key: $\{\text{contact\_id}\}$
+   - Foreign Key: `user_id` $\to$ `USERS(user_id)`
+
+2. **`CONVERSATIONS`** (Cleaned relation)
+   $$\text{CONVERSATIONS}(\underline{\text{conversation\_id}}, \text{user\_id}, \text{contact\_id}, \text{conv\_type}, \text{title}, \text{is\_muted}, \text{created\_at}, \text{last\_active\_at})$$
+   - Primary Key: $\{\text{conversation\_id}\}$
+   - Foreign Key 1: `user_id` $\to$ `USERS(user_id)`
+   - Foreign Key 2: `contact_id` $\to$ `CONTACTS(contact_id)`
+
+---
+
+### 6.3 Proving 3NF Compliance
+By Codd’s theorem, a relation $R$ is in 3NF if for every non-trivial functional dependency $X \to Y$:
+- Condition A: $X$ is a Superkey of $R$, **OR**
+- Condition B: Every attribute $A \in (Y - X)$ is a prime attribute (member of a candidate key).
+
+Inspecting all relations:
+- In `CONTACTS`: $\text{contact\_id}$ is a superkey. Condition A is satisfied.
+- In `CONVERSATIONS`: $\text{conversation\_id}$ is a superkey. Condition A is satisfied.
+- In `MESSAGES`: $\text{msg\_id}$ is a superkey. Condition A is satisfied.
+- In `RATCHET_SESSIONS`: $\text{session\_id}$ is a superkey. Condition A is satisfied.
+- In `SKIPPED_KEYS`: $\{\text{session\_id}, \text{skipped\_dh\_pub}, \text{skipped\_msg\_ctr}\}$ is a superkey. Condition A is satisfied.
+- In `OUTBOX`: $\text{envelope\_id}$ is a superkey. Condition A is satisfied.
+- In `RELAY`: $\text{route\_token}$ is a superkey. Condition A is satisfied.
+
+No transitive dependencies remain. The schema is strictly in **3NF**.
+
+---
+
