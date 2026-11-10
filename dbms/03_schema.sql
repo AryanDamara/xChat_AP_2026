@@ -190,3 +190,98 @@ CREATE TABLE relay_cache (
     received_at         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at          DATETIME NOT NULL
 );
+
+-- ============================================================================
+-- 12. PERFORMANCE INDEXING ARCHITECTURE (Aligned with CP3 & CP4 Benchmarks)
+-- ============================================================================
+
+-- Fast lookup of user identity keys
+CREATE INDEX idx_identity_keys_user 
+    ON identity_keys(user_id);
+
+-- Rapid filtration of active vs consumed prekeys during X3DH negotiation
+CREATE INDEX idx_prekeys_user_consumed 
+    ON prekey_bundles(user_id, is_consumed);
+
+-- O(1) sender verification by address during packet ingress
+CREATE INDEX idx_contacts_user_peer 
+    ON contacts(user_id, peer_address);
+
+-- Active conversation list sorted by recent activity timestamp
+CREATE INDEX idx_conversations_user_active 
+    ON conversations(user_id, last_active_at DESC);
+
+-- Conversation lookup by contact ID
+CREATE INDEX idx_conversations_contact 
+    ON conversations(contact_id);
+
+-- Compound covering index for message feed cursor pagination and thread retrieval
+CREATE INDEX idx_messages_conversation_sent_at 
+    ON messages(conversation_id, sent_at DESC);
+
+-- Rapid filtration for aggregate unread message count badges
+CREATE INDEX idx_messages_delivery_status 
+    ON messages(delivery_status);
+
+-- Double Ratchet cryptographic session state point lookup
+CREATE INDEX idx_ratchet_sessions_conversation 
+    ON ratchet_sessions(conversation_id);
+
+-- Fast lookup and pruning of expired skipped ratchet keys
+CREATE INDEX idx_skipped_keys_lookup 
+    ON skipped_keys(session_id, expires_at);
+
+-- Multi-carrier outbox dispatcher priority queue
+CREATE INDEX idx_outbox_queue_priority 
+    ON outbox_queue(status, next_retry_at);
+
+-- Outbox envelope tracking by conversation thread
+CREATE INDEX idx_outbox_queue_conversation 
+    ON outbox_queue(conversation_id);
+
+-- High-speed automated mesh garbage collection scan
+CREATE INDEX idx_relay_cache_ttl 
+    ON relay_cache(expires_at);
+
+-- ============================================================================
+-- 13. SEED VERIFICATION TRANSACTIONS (Integrity & Constraint Validation)
+-- ============================================================================
+BEGIN TRANSACTION;
+
+-- Insert primary local node
+INSERT INTO users (user_id, username, master_fingerprint)
+VALUES ('usr_01', 'Alice_LocalNode', 'E4B8C1D2A3F4E5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9A0');
+
+-- Insert identity signing key
+INSERT INTO identity_keys (key_id, user_id, key_type, public_key, encrypted_privkey)
+VALUES ('key_01', 'usr_01', 'ED25519_SIGNING', 'ed25519_pub_alice_master_key_hash', X'DEADBEEFCAFE1234');
+
+-- Insert prekey bundle
+INSERT INTO prekey_bundles (prekey_id, user_id, key_id_num, key_type, public_key, signature, is_consumed)
+VALUES ('pre_01', 'usr_01', 1, 'SIGNED_PREKEY', 'x25519_pub_alice_prekey_01', 'sig_alice_01', 0);
+
+-- Insert remote contact
+INSERT INTO contacts (contact_id, user_id, peer_address, peer_name, reachable_socket, public_key, fingerprint, trust_status)
+VALUES ('cnt_01', 'usr_01', 'xchat://bob.p2p', 'Bob_Macbook', '192.168.1.15:9400', 'ed25519_pub_bob', 'B1C2D3E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9A0B1C2', 'VERIFIED');
+
+-- Insert conversation thread
+INSERT INTO conversations (conversation_id, user_id, contact_id, conv_type, title)
+VALUES ('conv_01', 'usr_01', 'cnt_01', 'DIRECT', 'Encrypted P2P with Bob');
+
+-- Insert Double Ratchet session state
+INSERT INTO ratchet_sessions (session_id, conversation_id, peer_dh_ratchet_pub, local_dh_ratchet_pub, root_key_hash, send_chain_key_hash, recv_chain_key_hash, send_counter, recv_counter)
+VALUES ('ses_01', 'conv_01', 'bob_dh_pub_01', 'alice_dh_pub_01', 'sha256_root_kdf_hash', 'sha256_send_chain_01', 'sha256_recv_chain_01', 1, 1);
+
+-- Insert verified message record
+INSERT INTO messages (message_id, conversation_id, sender_address, recipient_address, ciphertext, nonce, ratchet_counter, delivery_status)
+VALUES ('msg_01', 'conv_01', 'xchat://bob.p2p', 'usr_01', X'414C49434520534543555245205041594C4F4144', 'nonce_12byte_hex', 0, 'DELIVERED');
+
+-- Insert outbox envelope queued for BLE mesh dispatch
+INSERT INTO outbox_queue (envelope_id, conversation_id, destination_address, transport_type, raw_payload, status)
+VALUES ('env_01', 'conv_01', 'xchat://bob.p2p', 'BLE_MESH', X'7843686174576972654672616D65', 'QUEUED');
+
+-- Insert blind relay packet
+INSERT INTO relay_cache (route_token, opaque_envelope, hop_count, ttl_seconds, expires_at)
+VALUES ('token_mesh_hop_01', X'4F50415155455F4D4553485F454E56454C4F5045', 2, 3600, datetime('now', '+3600 seconds'));
+
+COMMIT;
