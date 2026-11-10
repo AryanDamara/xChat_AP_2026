@@ -438,6 +438,15 @@ The following matrix formally verifies that every BCNF relation and functional d
 
 ---
 
-## 8. Conclusion
+## 8. Active Audit & Synchronization Triggers (Better-Approach Architecture)
+
+To eliminate edge-case state desynchronization between client applications and the underlying vault storage, the physical schema deploys automated DBMS triggers:
+1. **`trg_messages_update_conversation_last_active`**: Automatically synchronizes `conversations.last_active_at` whenever a new message is inserted into `messages`, ensuring active chat order is maintained natively by the database engine without relying on external application code.
+2. **`trg_contacts_update_timestamp`**: Updates `contacts.updated_at` whenever peer sockets or trust ratings change.
+3. **`trg_ratchet_session_update_timestamp`**: Records the exact transition timestamp on `ratchet_sessions` whenever cryptographic counters increment.
+
+---
+
+## 9. Conclusion
 
 The xChat Entity-Relationship model satisfies all constraints of relational database theory, strict referential integrity, and decentralized cryptographic mechanics. The entities, relationships, attributes, and indexing structures defined here are physically instantiated in `dbms/03_schema.sql` and visually captured in `dbms/02_er_diagram.png`.

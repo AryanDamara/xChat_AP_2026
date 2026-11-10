@@ -247,7 +247,41 @@ CREATE INDEX idx_relay_cache_ttl
     ON relay_cache(expires_at);
 
 -- ============================================================================
--- 13. SEED VERIFICATION TRANSACTIONS (Integrity & Constraint Validation)
+-- 13. ACTIVE AUDIT & SYNCHRONIZATION TRIGGERS
+-- ============================================================================
+
+-- Trigger 1: Automatically sync conversation last_active_at on new message insertion
+CREATE TRIGGER trg_messages_update_conversation_last_active
+AFTER INSERT ON messages
+FOR EACH ROW
+BEGIN
+    UPDATE conversations
+    SET last_active_at = NEW.sent_at
+    WHERE conversation_id = NEW.conversation_id;
+END;
+
+-- Trigger 2: Automatically update contacts updated_at timestamp when socket changes
+CREATE TRIGGER trg_contacts_update_timestamp
+AFTER UPDATE OF reachable_socket, trust_status ON contacts
+FOR EACH ROW
+BEGIN
+    UPDATE contacts
+    SET updated_at = CURRENT_TIMESTAMP
+    WHERE contact_id = NEW.contact_id;
+END;
+
+-- Trigger 3: Automatically record ratchet session transition timestamps on counter increment
+CREATE TRIGGER trg_ratchet_session_update_timestamp
+AFTER UPDATE OF send_counter, recv_counter, peer_dh_ratchet_pub ON ratchet_sessions
+FOR EACH ROW
+BEGIN
+    UPDATE ratchet_sessions
+    SET last_ratchet_at = CURRENT_TIMESTAMP
+    WHERE session_id = NEW.session_id;
+END;
+
+-- ============================================================================
+-- 14. SEED VERIFICATION TRANSACTIONS (Integrity & Constraint Validation)
 -- ============================================================================
 BEGIN TRANSACTION;
 
