@@ -11,6 +11,8 @@
 
 -- Enable foreign key constraint validation in SQLite engines
 PRAGMA foreign_keys = ON;
+PRAGMA journal_mode = WAL;
+PRAGMA busy_timeout = 5000;
 
 -- ----------------------------------------------------------------------------
 -- 1. DROP EXISTING RELATIONS (Reverse Topological Dependency Order)
@@ -31,7 +33,7 @@ DROP TABLE IF EXISTS users;
 -- ----------------------------------------------------------------------------
 CREATE TABLE users (
     user_id             TEXT PRIMARY KEY,
-    username            TEXT NOT NULL,
+    username            TEXT NOT NULL COLLATE NOCASE,
     master_fingerprint  TEXT NOT NULL UNIQUE,
     created_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -74,7 +76,7 @@ CREATE TABLE prekey_bundles (
 CREATE TABLE contacts (
     contact_id          TEXT PRIMARY KEY,
     user_id             TEXT NOT NULL,
-    peer_address        TEXT NOT NULL,
+    peer_address        TEXT NOT NULL COLLATE NOCASE,
     peer_name           TEXT NOT NULL,
     reachable_socket    TEXT NOT NULL,
     public_key          TEXT NOT NULL,
@@ -169,7 +171,7 @@ CREATE TABLE outbox_queue (
     transport_type      TEXT NOT NULL 
                         CHECK (transport_type IN ('TCP_LAN', 'BLE_MESH', 'SPHINX_MIXNET', 'SMS_MODEM')),
     raw_payload         BLOB NOT NULL,
-    retry_count         INTEGER NOT NULL DEFAULT 0 CHECK (retry_count >= 0),
+    retry_count         INTEGER NOT NULL DEFAULT 0 CHECK (retry_count >= 0 AND retry_count <= max_retries),
     max_retries         INTEGER NOT NULL DEFAULT 5 CHECK (max_retries >= 0),
     next_retry_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     status              TEXT NOT NULL DEFAULT 'QUEUED' 
@@ -185,10 +187,11 @@ CREATE TABLE outbox_queue (
 CREATE TABLE relay_cache (
     route_token         TEXT PRIMARY KEY,
     opaque_envelope     BLOB NOT NULL,
-    hop_count           INTEGER NOT NULL DEFAULT 1 CHECK (hop_count >= 0),
+    hop_count           INTEGER NOT NULL DEFAULT 1 CHECK (hop_count >= 1 AND hop_count <= 16),
     ttl_seconds         INTEGER NOT NULL DEFAULT 3600 CHECK (ttl_seconds >= 0),
     received_at         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    expires_at          DATETIME NOT NULL
+    expires_at          DATETIME NOT NULL,
+    CONSTRAINT chk_relay_ttl_order CHECK (expires_at >= received_at)
 );
 
 -- ============================================================================

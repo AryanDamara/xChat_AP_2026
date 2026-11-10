@@ -279,7 +279,7 @@ Below is the exhaustive relational attribute specification mapping physical stor
 | Column Name | SQL Data Type | Modifiers / Constraints | Description & Domain |
 | :--- | :--- | :--- | :--- |
 | `user_id` | `TEXT` | `PRIMARY KEY` | UUIDv4 string uniquely identifying the local user account. |
-| `username` | `TEXT` | `NOT NULL` | Local operator screen handle or display name. |
+| `username` | `TEXT` | `NOT NULL COLLATE NOCASE` | Local operator screen handle or display name. |
 | `master_fingerprint` | `TEXT` | `NOT NULL UNIQUE` | 64-character hex SHA-256 fingerprint derived from master identity key. |
 | `created_at` | `DATETIME` | `NOT NULL DEFAULT CURRENT_TIMESTAMP` | Node initialization timestamp. |
 
@@ -310,7 +310,7 @@ Below is the exhaustive relational attribute specification mapping physical stor
 | :--- | :--- | :--- | :--- |
 | `contact_id` | `TEXT` | `PRIMARY KEY` | UUIDv4 string uniquely identifying the contact record. |
 | `user_id` | `TEXT` | `NOT NULL REFERENCES users(user_id) ON DELETE CASCADE` | Local node owning this contact card. |
-| `peer_address` | `TEXT` | `NOT NULL` | Cryptographic public address of the peer. |
+| `peer_address` | `TEXT` | `NOT NULL COLLATE NOCASE` | Cryptographic public address of the peer. |
 | `peer_name` | `TEXT` | `NOT NULL` | User-assigned or peer-announced display name. |
 | `reachable_socket` | `TEXT` | `NOT NULL` | Direct network endpoint (e.g. `192.168.1.15:9400`, `ble://...`). |
 | `public_key` | `TEXT` | `NOT NULL` | Verified long-term Ed25519 identity public key. |
@@ -376,7 +376,7 @@ Below is the exhaustive relational attribute specification mapping physical stor
 | `destination_address`| `TEXT`| `NOT NULL` | Final destination peer address. |
 | `transport_type` | `TEXT` | `NOT NULL CHECK (transport_type IN ('TCP_LAN', 'BLE_MESH', 'SPHINX_MIXNET', 'SMS_MODEM'))`| Designated transmission carrier. |
 | `raw_payload` | `BLOB` | `NOT NULL` | Wire-format serialized message frame. |
-| `retry_count` | `INTEGER` | `NOT NULL DEFAULT 0 CHECK (retry_count >= 0)` | Number of failed dispatch attempts. |
+| `retry_count` | `INTEGER` | `NOT NULL DEFAULT 0 CHECK (retry_count >= 0 AND retry_count <= max_retries)` | Number of failed dispatch attempts. |
 | `max_retries` | `INTEGER` | `NOT NULL DEFAULT 5 CHECK (max_retries >= 0)` | Maximum retry limit before failure. |
 | `next_retry_at` | `DATETIME` | `NOT NULL DEFAULT CURRENT_TIMESTAMP` | Exponential backoff scheduled timestamp. |
 | `status` | `TEXT` | `NOT NULL CHECK (status IN ('QUEUED', 'IN_FLIGHT', 'ACKNOWLEDGED', 'DEAD_LETTER'))`| Current outbox delivery status. |
@@ -387,10 +387,10 @@ Below is the exhaustive relational attribute specification mapping physical stor
 | :--- | :--- | :--- | :--- |
 | `route_token` | `TEXT` | `PRIMARY KEY` | Blind HMAC routing token identifying the relay envelope. |
 | `opaque_envelope`| `BLOB` | `NOT NULL` | Unreadable encrypted envelope buffered for third-party mesh nodes. |
-| `hop_count` | `INTEGER` | `NOT NULL DEFAULT 1 CHECK (hop_count >= 0)` | Number of intermediate mesh hops traversed. |
+| `hop_count` | `INTEGER` | `NOT NULL DEFAULT 1 CHECK (hop_count >= 1 AND hop_count <= 16)` | Number of intermediate mesh hops traversed. |
 | `ttl_seconds` | `INTEGER` | `NOT NULL DEFAULT 3600 CHECK (ttl_seconds >= 0)`| Remaining packet lifetime in seconds. |
 | `received_at` | `DATETIME` | `NOT NULL DEFAULT CURRENT_TIMESTAMP` | Time envelope was received over mesh. |
-| `expires_at` | `DATETIME` | `NOT NULL` | Automatic deletion timestamp (`received_at + ttl_seconds`). |
+| `expires_at` | `DATETIME` | `NOT NULL CHECK (expires_at >= received_at)` | Automatic deletion timestamp (`received_at + ttl_seconds`). |
 
 ---
 
